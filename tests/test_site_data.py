@@ -23,10 +23,10 @@ class SiteDataTests(unittest.TestCase):
         self.addCleanup(self.temp.cleanup)
         self.data = Path(self.temp.name) / "public.csv"
         self.rows = [
-            ["12001", 1, 2, 3, 4, 5, 1, 2, "2012-01-01"],
-            ["13001", 6, 7, 8, 9, 10, 3, 4, "2013-01-02"],
-            ["13002", 6, 12, 17, 29, 30, 7, 11, "2013-01-05"],
-            ["13003", 6, 12, 17, 29, 30, 7, 11, "2013-01-07"],
+            ["22001", 1, 2, 3, 4, 5, 1, 2, "2022-01-01"],
+            ["23001", 6, 7, 8, 9, 10, 3, 4, "2023-01-02"],
+            ["23002", 6, 12, 17, 29, 30, 7, 11, "2023-01-05"],
+            ["23003", 6, 12, 17, 29, 30, 7, 11, "2023-01-07"],
         ]
         self.write_csv()
 
@@ -51,13 +51,13 @@ class SiteDataTests(unittest.TestCase):
         self.assertEqual(result["schema_version"], 1)
         self.assertEqual(result["history"]["rows"], 3)
         self.assertEqual(result["history"]["excluded_before_start"], 1)
-        self.assertEqual(result["history"]["first_id"], "13001")
+        self.assertEqual(result["history"]["first_id"], "23001")
         records, _ = builder.model.load_data(self.data)
         history = [r for r in records if builder.model.within_history_scope(r)]
         for mode in ("coverage", "uniform"):
             self.assertEqual(result["portfolios"][mode], builder.model.generate_portfolio(
                 history, seed=0, groups=5, mode=mode))
-        self.assertEqual([r["id"] for r in result["recent_draws"]], ["13003", "13002", "13001"])
+        self.assertEqual([r["id"] for r in result["recent_draws"]], ["23003", "23002", "23001"])
         self.assertNotIn("target", result)
 
     def test_distribution_denominators_and_adjacency(self):
@@ -102,7 +102,7 @@ class SiteDataTests(unittest.TestCase):
         after = builder.build_snapshot(self.data)
         for field in ("portfolios", "distributions", "recent_draws"):
             self.assertEqual(before[field], after[field])
-        self.rows = [["12001", 1, 2, 3, 4, 5, 1, 2, "2012-01-01"]]
+        self.rows = [["22001", 1, 2, 3, 4, 5, 1, 2, "2022-01-01"]]
         self.write_csv()
         with self.assertRaisesRegex(ValueError, "没有有效历史"):
             builder.build_snapshot(self.data)
@@ -131,12 +131,12 @@ class SiteDataTests(unittest.TestCase):
         self.assertEqual(list(output.parent.glob(".snapshot-*")), [])
 
     def test_recent_draws_are_limited_and_latest_first(self):
-        self.rows = [[f"130{i:02d}", 1, 2, 3, 4, 5, 1, 2, f"2013-01-{i:02d}"] for i in range(1, 13)]
+        self.rows = [[f"230{i:02d}", 1, 2, 3, 4, 5, 1, 2, f"2023-01-{i:02d}"] for i in range(1, 13)]
         self.write_csv()
         result = builder.build_snapshot(self.data)
         self.assertEqual(len(result["recent_draws"]), 8)
-        self.assertEqual(result["recent_draws"][0]["id"], "13012")
-        self.assertEqual(result["recent_draws"][-1]["id"], "13005")
+        self.assertEqual(result["recent_draws"][0]["id"], "23012")
+        self.assertEqual(result["recent_draws"][-1]["id"], "23005")
 
     def test_runtime_bytes_hashes_floor_and_source_unchanged(self):
         self.metadata()
@@ -148,11 +148,15 @@ class SiteDataTests(unittest.TestCase):
         manifest = json.loads((runtime / "manifest.json").read_text())
         self.assertEqual((runtime / "model.py").read_bytes(), builder.MODEL_FILE.read_bytes())
         self.assertEqual(manifest["model_sha256"], hashlib.sha256(builder.MODEL_FILE.read_bytes()).hexdigest())
+        for name, source, key in (("research.py", builder.RESEARCH_FILE, "research_sha256"),
+                                  ("conditional_core.py", builder.CONDITIONAL_FILE, "conditional_core_sha256")):
+            self.assertEqual((runtime / name).read_bytes(), source.read_bytes())
+            self.assertEqual(manifest[key], hashlib.sha256(source.read_bytes()).hexdigest())
         self.assertEqual(manifest["data_sha256"], hashlib.sha256((runtime / "history.csv").read_bytes()).hexdigest())
         records, audit = builder.model.load_data(runtime / "history.csv")
         self.assertEqual(audit["rows"], 3)
-        self.assertEqual([row["id"] for row in records], ["13001", "13002", "13003"])
-        self.assertEqual(manifest["history"]["first_id"], "13001")
+        self.assertEqual([row["id"] for row in records], ["23001", "23002", "23003"])
+        self.assertEqual(manifest["history"]["first_id"], "23001")
         self.assertEqual(manifest["source"], snapshot["source"])
         for item in runtime.iterdir():
             self.assertNotIn(self.temp.name, item.read_text())
@@ -183,7 +187,7 @@ class SiteDataTests(unittest.TestCase):
         arguments = ["--data", str(self.data), "--output", str(output), "--runtime-dir", str(runtime)]
         with contextlib.redirect_stdout(io.StringIO()):
             self.assertEqual(builder.main(arguments), 0)
-        first = {name: (runtime / name).read_bytes() for name in ("model.py", "history.csv", "manifest.json")}
+        first = {name: (runtime / name).read_bytes() for name in builder.RUNTIME_NAMES}
         with contextlib.redirect_stdout(io.StringIO()):
             self.assertEqual(builder.main(arguments), 0)
         self.assertEqual(first, {name: (runtime / name).read_bytes() for name in first})

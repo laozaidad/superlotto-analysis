@@ -58,6 +58,12 @@ jobs:
           assert manifest['schema_version'] == 1, 'Unsupported runtime manifest'
           assert model == canonical, 'Browser model differs from canonical Python model'
           assert hashlib.sha256(model).hexdigest() == manifest['model_sha256'], 'Model hash mismatch'
+          for name, key in [('research.py', 'research_sha256'), ('conditional_core.py', 'conditional_core_sha256')]:
+              content = (runtime / name).read_bytes()
+              assert content == (Path('skills/superlotto/scripts') / name).read_bytes(), f'{name} differs from canonical source'
+              assert hashlib.sha256(content).hexdigest() == manifest[key], f'{name} hash mismatch'
+          assert manifest['history']['history_start_issue'] == '23001'
+          assert manifest['history']['first_id'] >= '23001'
           assert hashlib.sha256(history).hexdigest() == manifest['data_sha256'], 'History hash mismatch'
           print('Browser runtime matches canonical model and manifest hashes')
           PY

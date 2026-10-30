@@ -34,7 +34,7 @@ function issue(value) {
     typeof value === "string" &&
     /^[0-9]{5}$/.test(value) &&
     Number(value.slice(2)) > 0 &&
-    Number(value) >= 13001
+    Number(value) >= 23001
   );
 }
 /** @param {unknown} value */
@@ -123,8 +123,8 @@ export function validatePortfolio(input) {
     "不支持的组合策略",
   );
   requireValue(
-    p.history_start_date === "2013-01-01",
-    "只接受2013-01-01起的数据模型",
+    p.history_start_date === "2023-01-01",
+    "只接受2023-01-01起的数据模型",
   );
   requireValue(
     p.prediction_gate === "CLOSED" && p.predictive_advantage_claim === false,
@@ -213,8 +213,8 @@ export function validateSnapshot(input) {
     portfolios = object(s.portfolios);
   requireValue(s.schema_version === 1, "不支持的快照格式");
   requireValue(
-    h.history_start_date === "2013-01-01" &&
-      h.history_start_issue === "13001" &&
+    h.history_start_date === "2023-01-01" &&
+      h.history_start_issue === "23001" &&
       integer(h.rows, 1, 1000000),
     "快照的数据范围不正确",
   );
@@ -225,7 +225,7 @@ export function validateSnapshot(input) {
   requireValue(
     calendarDate(h.first_date) &&
       calendarDate(h.last_date) &&
-      h.first_date >= "2013-01-01" &&
+      h.first_date >= "2023-01-01" &&
       Date.parse(h.last_date) >= Date.parse(h.first_date) &&
       h.first_date.slice(2, 4) === h.first_id.slice(0, 2) &&
       h.last_date.slice(2, 4) === h.last_id.slice(0, 2),
@@ -296,9 +296,9 @@ export function parseLocalResult(text) {
   const p = validatePortfolio(data),
     cutoff = object(data.cutoff);
   requireValue(
-    cutoff.history_start_date === "2013-01-01" &&
-      cutoff.history_start_issue === "13001",
-    "结果缺少2013年起的截断审计",
+    cutoff.history_start_date === "2023-01-01" &&
+      cutoff.history_start_issue === "23001",
+    "结果缺少2023年起的截断审计",
   );
   requireValue(
     issue(cutoff.target) &&

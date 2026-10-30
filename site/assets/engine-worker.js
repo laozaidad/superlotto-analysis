@@ -1,13 +1,18 @@
 /** 固定版本 Pyodide 在独立线程运行仓库模型，页面无服务端计算。 */
-import { validateParameters, MAX_CSV_BYTES } from "./engine.js";
+import {
+  validateParameters,
+  validateResearchParameters,
+  MAX_CSV_BYTES,
+} from "./engine.js";
 /** @typedef {import('./engine.js').AnalysisParameters} AnalysisParameters */
+/** @typedef {import('./engine.js').ResearchParameters} ResearchParameters */
 /** @typedef {{FS:{writeFile:(path:string,data:Uint8Array|string)=>void,unlink:(path:string)=>void},globals:{set:(name:string,value:unknown)=>void,delete:(name:string)=>void},runPythonAsync:(code:string)=>Promise<any>,version:string}} PythonRuntime */
-/** @typedef {{schema_version:number,model_sha256:string,data_sha256:string,history:{rows:number,first_id:string,last_id:string},source?:{url?:string|null,warnings?:string[]}}} Manifest */
+/** @typedef {{schema_version:number,model_sha256:string,research_sha256:string,conditional_core_sha256:string,data_sha256:string,history:{rows:number,first_id:string,last_id:string},source?:{url?:string|null,warnings?:string[]}}} Manifest */
 
 export const PYODIDE_VERSION = "314.0.7";
 const PYODIDE_BASE = `https://cdn.jsdelivr.net/pyodide/v${PYODIDE_VERSION}/full/`;
 /** @type {Promise<PythonRuntime>|null} */ let runtimePromise = null;
-/** @type {Promise<{manifest:Manifest,model:Uint8Array}>|null} */ let assetsPromise =
+/** @type {Promise<{manifest:Manifest,model:Uint8Array,research:Uint8Array,conditional:Uint8Array}>|null} */ let assetsPromise =
   null;
 /** @type {Uint8Array|null} */ let publicCSV = null;
 let running = false;
@@ -50,13 +55,22 @@ async function getAssets() {
       if (
         manifest.schema_version !== 1 ||
         !/^[a-f0-9]{64}$/.test(manifest.model_sha256) ||
-        !/^[a-f0-9]{64}$/.test(manifest.data_sha256)
+        !/^[a-f0-9]{64}$/.test(manifest.data_sha256) ||
+        !/^[a-f0-9]{64}$/.test(manifest.research_sha256) ||
+        !/^[a-f0-9]{64}$/.test(manifest.conditional_core_sha256)
       )
         throw new Error("发布清单格式错误，停止计算");
       const model = await readAsset("model.py", 1024 * 1024);
       if ((await sha256(model)) !== manifest.model_sha256)
         throw new Error("Python模型哈希与发布清单不一致，请刷新页面后重试");
-      return { manifest, model };
+      const research = await readAsset("research.py", 1024 * 1024);
+      const conditional = await readAsset("conditional_core.py", 1024 * 1024);
+      if (
+        (await sha256(research)) !== manifest.research_sha256 ||
+        (await sha256(conditional)) !== manifest.conditional_core_sha256
+      )
+        throw new Error("研究模块哈希与发布清单不一致，停止计算");
+      return { manifest, model, research, conditional };
     })();
   return assetsPromise;
 }
@@ -95,7 +109,7 @@ def _browser_analyze():
     if len(history) < 100:
         warnings.append(f'只有{len(history)}期历史，少于100期；按实际样本计算，不补造数据。')
     if history[0]['id'] != model.HISTORY_START_ISSUE:
-        warnings.append('有效历史未从13001开始，不能视为2013年以来的完整数据。')
+        warnings.append('有效历史未从23001开始，不能视为2023年以来的完整数据。')
     gaps = [{'after': a['id'], 'before': b['id']} for a, b in zip(history, history[1:])
             if (a['id'][:2] == b['id'][:2] and int(b['id']) != int(a['id']) + 1)
             or int(b['id'][:2]) > int(a['id'][:2]) + 1]
@@ -138,11 +152,62 @@ def _browser_analyze():
 _browser_analyze()
 `;
 
-/** @param {number} id @param {AnalysisParameters} input */
-async function analyze(id, input) {
-  const params = validateParameters(input);
+// 独立研究返回结构，不把号码池伪装成单式Portfolio。
+const RESEARCH = `
+import json, sys
+import model, research
+
+def _browser_research():
+    params = json.loads(_browser_parameters)
+    context = json.loads(_browser_context)
+    records, audit = model.load_data('/input.csv')
+    result = research.generate_research(records, params['target'], params['poolSize'])
+    history, _ = model.select_history(records, params['target'])
+    # 与 CLI data_quality 保持同级检查；不能把结构合法或成功计算说成历史完整。
+    target = params['target']
+    quality_warnings = []
+    if history[0]['id'] != model.HISTORY_START_ISSUE:
+        quality_warnings.append('有效历史未从23001开始，不能视为2023年以来的完整数据。')
+    missing = [{'after': a['id'], 'before': b['id']} for a, b in zip(history, history[1:])
+               if (a['id'][:2] == b['id'][:2] and int(b['id'][2:]) != int(a['id'][2:]) + 1)
+               or int(b['id'][:2]) > int(a['id'][:2]) + 1]
+    if missing:
+        quality_warnings.append('存在同年或整年期号缺口；频率窗口和遗漏按已有记录计数，不代表连续实际期数。')
+    last_id = history[-1]['id']
+    predecessor_present = int(target[2:]) > 1 and int(last_id) == int(target) - 1
+    if int(target[2:]) > 1 and not predecessor_present:
+        quality_warnings.append(f'数据截止{last_id}，未包含目标{target}的上一期；可能陈旧或目标尚远，不宣称最新完整。')
+    if int(target[2:]) == 1:
+        quality_warnings.append('目标为当年首期；仅凭五位期号不能确认上年最后一期完整性。')
+    result['data_quality'] = {'training_count': len(history), 'training_last_id': last_id,
+        'target_predecessor_present': predecessor_present, 'within_year_gaps': missing,
+        'warnings': quality_warnings, 'complete_history_verified': False,
+        'completeness_note': '连续性和上一期检查不是第三方数据准确性或跨年全量完整性的证明。'}
+    audit.pop('source_path', None)
+    result['audit'] = audit
+    result['runtime'] = {'name': 'Pyodide', 'pyodide_version': context['pyodide_version'],
+        'python_version': sys.version.split()[0], 'model_sha256': context['model_sha256'],
+        'research_sha256': context['research_sha256'], 'conditional_core_sha256': context['conditional_core_sha256'],
+        'data_origin': context['data_origin'], 'data_sha256': audit['source_sha256']}
+    result['warnings'] = list(dict.fromkeys([
+        *result['warnings'], *audit['warnings'], *quality_warnings,
+        '第三方数据未逐条官方核验；来源哈希不证明真实性或完整性。',
+        '研究仅在至少200期有效历史（100期特征预热 + 100行学习样本）时运行；不足时停止，不回退到其他模式。',
+        '本地CSV未上传，来源未核验。' if context['data_origin'] == 'local' else '使用发布时的公共历史，不自动更新，不保证最新完整。',
+    ]))
+    return json.dumps(result, ensure_ascii=False, allow_nan=False)
+
+_browser_research()
+`;
+
+/** @param {number} id @param {AnalysisParameters|ResearchParameters} input @param {'analysis'|'research'} task */
+async function analyze(id, input, task) {
+  const params =
+    task === "research"
+      ? validateResearchParameters(/** @type {ResearchParameters} */ (input))
+      : validateParameters(/** @type {AnalysisParameters} */ (input));
   progress(id, "正在校验发布模型与历史数据…");
-  const { manifest, model } = await getAssets();
+  const { manifest, model, research, conditional } = await getAssets();
   let csv;
   if (params.csvText !== undefined)
     csv = new TextEncoder().encode(params.csvText);
@@ -160,30 +225,40 @@ async function analyze(id, input) {
   progress(id, "正在加载 Python 运行时（首次下载较慢，可取消）…");
   const python = await getRuntime();
   python.FS.writeFile("/model.py", model);
+  python.FS.writeFile("/research.py", research);
+  python.FS.writeFile("/conditional_core.py", conditional);
   python.FS.writeFile("/input.csv", csv);
   python.globals.set(
     "_browser_parameters",
-    JSON.stringify({
-      target: params.target,
-      seed: params.seed,
-      groups: params.groups,
-      mode: params.mode,
-    }),
+    JSON.stringify(
+      Object.fromEntries(
+        Object.entries(params).filter(([key]) => key !== "csvText"),
+      ),
+    ),
   );
   python.globals.set(
     "_browser_context",
     JSON.stringify({
       model_sha256: manifest.model_sha256,
+      research_sha256: manifest.research_sha256,
+      conditional_core_sha256: manifest.conditional_core_sha256,
       pyodide_version: PYODIDE_VERSION,
       data_origin: params.csvText !== undefined ? "local" : "public",
     }),
   );
-  progress(id, "原版模型正在校验CSV、截断目标期并生成组合…");
+  progress(
+    id,
+    task === "research"
+      ? "研究模型正在生成历史学习样本、拟合条件权重与固定规模号码池…"
+      : "原版模型正在校验CSV、截断目标期并生成组合…",
+  );
   try {
     await python.runPythonAsync(
       "import sys\nif '/' not in sys.path: sys.path.insert(0, '/')",
     );
-    const result = await python.runPythonAsync(ANALYZE);
+    const result = await python.runPythonAsync(
+      task === "research" ? RESEARCH : ANALYZE,
+    );
     if (typeof result !== "string")
       throw new Error("Python未返回有效JSON字符串");
     return JSON.parse(result);
@@ -207,7 +282,9 @@ self.addEventListener("message", async (event) => {
   }
   running = true;
   try {
-    const result = await analyze(message.id, message.params);
+    if (message.task !== "research" && message.task !== "analysis")
+      throw new Error("未知计算任务");
+    const result = await analyze(message.id, message.params, message.task);
     self.postMessage({ type: "result", id: message.id, result });
   } catch (error) {
     self.postMessage({

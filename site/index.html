@@ -5,13 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="大乐透选号分析：2013年以来的历史数据、可复现的组合覆盖与公开透明的统计方法。统计不是预测。"
+      content="大乐透选号分析：2023年以来的历史数据、可复现的组合覆盖与公开透明的统计方法。统计不是预测。"
     />
     <meta name="color-scheme" content="light dark" />
     <meta name="theme-color" content="#153e35" />
     <title>大乐透选号分析 · 看懂数据，尊重随机</title>
     <link rel="stylesheet" href="assets/style.css" />
     <link rel="stylesheet" href="assets/controls.css" />
+    <link rel="stylesheet" href="assets/research.css" />
     <script type="module" src="assets/app.js"></script>
   </head>
   <body>
@@ -23,7 +24,7 @@
       >
       <nav aria-label="主导航">
         <a href="#analysis">组合分析</a><a href="#history">历史观察</a
-        ><a href="#method">模型方法</a>
+        ><a href="#research">实验研究</a><a href="#method">模型方法</a>
       </nav>
       <a
         class="repo-link"
@@ -62,7 +63,7 @@
       <section class="snapshot-strip wrap" aria-label="当前公共数据快照">
         <div>
           <span>分析范围</span
-          ><strong>2013 <small>年至今的已收录数据</small></strong>
+          ><strong>2023 <small>年至今的已收录数据</small></strong>
         </div>
         <div>
           <span>有效历史</span
@@ -99,7 +100,7 @@
             </h2>
           </div>
           <p>
-            设定参数，实际运行原版 Python 模型。<br />只使用2013年起、严格早于目标期的数据。
+            设定参数，实际运行原版 Python 模型。<br />只使用2023年起、严格早于目标期的数据。
           </p>
         </div>
         <form id="analysis-form" class="analysis-form" novalidate>
@@ -177,7 +178,7 @@
           <div class="data-controls">
             <div>
               <b id="active-data">使用公共历史</b
-              ><span id="data-detail">2013年起 · 读取数据范围中</span>
+              ><span id="data-detail">2023年起 · 读取数据范围中</span>
             </div>
             <div class="csv-control">
               <label for="csv-file" class="text-button">选择本地 CSV</label
@@ -335,6 +336,206 @@
         </div>
       </section>
 
+      <section
+        id="research"
+        class="wrap section research-section"
+        aria-labelledby="research-title"
+      >
+        <div class="section-heading">
+          <div>
+            <p class="section-number">RESEARCH / EXPERIMENTAL</p>
+            <h2 id="research-title">让算法接受证据检验。</h2>
+            <p>
+              条件学习 → 相似性软降权 →
+              固定规模号码池。仅使用2023年起、目标期之前的数据。
+            </p>
+          </div>
+          <span class="research-badge">实验性 · 未发现预测优势</span>
+        </div>
+        <div class="research-notice">
+          <strong>不是更准确的选号承诺。</strong>
+          五个专家的融合权重只是排序依据；复式扩大组合数量和成本，不提高单注准确率。与上方覆盖模型分别展示，不混合结果。
+        </div>
+        <form id="research-form" class="analysis-form research-form" novalidate>
+          <div class="research-fields">
+            <div class="form-field">
+              <label for="research-target">目标期号 <span>必填</span></label
+              ><input
+                id="research-target"
+                name="target"
+                inputmode="numeric"
+                pattern="[0-9]{5}"
+                maxlength="5"
+                autocomplete="off"
+                placeholder="输入五位期号"
+                required
+                aria-describedby="research-target-help"
+              /><small id="research-target-help"
+                >至少200期有效历史，严格早于该期；不足则停止</small
+              >
+            </div>
+            <div class="form-field">
+              <label for="research-pool">固定号码池规格</label
+              ><select
+                id="research-pool"
+                name="pool"
+                data-custom-select
+                aria-describedby="research-pool-help"
+              >
+                <option
+                  value="5+2"
+                  data-description="单式：展开1注，基本金额2元"
+                >
+                  5 + 2
+                </option>
+                <option value="5+5" data-description="展开10注，基本金额20元">
+                  5 + 5
+                </option>
+                <option value="7+3" data-description="展开63注，基本金额126元">
+                  7 + 3
+                </option>
+                <option value="8+3" data-description="展开168注，基本金额336元">
+                  8 + 3
+                </option></select
+              ><small id="research-pool-help"
+                >规格在计算前固定；金额不含追加</small
+              >
+            </div>
+            <div class="run-actions">
+              <button
+                id="research-generate"
+                class="button primary"
+                type="submit"
+              >
+                运行实验 →</button
+              ><button
+                id="research-cancel"
+                class="text-button"
+                type="button"
+                hidden
+              >
+                取消实验
+              </button>
+            </div>
+          </div>
+          <div class="data-controls">
+            <div>
+              <b>与组合分析共用数据源</b
+              ><span id="research-source">公共历史 · 2023年起</span>
+            </div>
+            <a class="text-button" href="#analysis">更换公共 / 本地 CSV ↑</a>
+          </div>
+          <p class="runtime-note">
+            固定配置：岭参数10、温度0.5、条件权重＋软去冗余。没有随机挑种子。首次需下载Pyodide，样本生成和拟合可能较慢；数据不上传。
+          </p>
+          <p
+            id="research-status"
+            class="run-status"
+            role="status"
+            aria-live="polite"
+          >
+            填写目标期后运行实验。下方历史证据不会因参数改变而变成新的验证结果。
+          </p>
+        </form>
+        <div id="research-result" class="research-result" hidden>
+          <div class="research-result-heading">
+            <div>
+              <h3>本次研究号码池</h3>
+              <p id="research-result-origin"></p>
+            </div>
+            <button
+              id="research-download"
+              class="download-button"
+              type="button"
+            >
+              下载研究 JSON ↓
+            </button>
+          </div>
+          <div class="research-pool-grid">
+            <div>
+              <span class="pool-label">LEFT / 前区号码池</span>
+              <div id="research-left" class="research-balls"></div>
+            </div>
+            <div>
+              <span class="pool-label">RIGHT / 后区号码池</span>
+              <div id="research-right" class="research-balls right"></div>
+            </div>
+          </div>
+          <dl class="research-metrics">
+            <div>
+              <dt>展开基本注数</dt>
+              <dd id="research-count"></dd>
+            </div>
+            <div>
+              <dt>基本金额 · 不含追加</dt>
+              <dd id="research-cost"></dd>
+            </div>
+            <div>
+              <dt>学习样本</dt>
+              <dd id="research-learning"></dd>
+            </div>
+          </dl>
+          <p id="research-probability" class="small-note"></p>
+          <div class="research-weight-heading">
+            <h3>五个专家的最终融合权重</h3>
+            <span>总和为1，不是中奖概率</span>
+          </div>
+          <div id="research-weights" class="research-weights"></div>
+          <details class="research-audit">
+            <summary>查看特征与运行审计</summary>
+            <p id="research-runtime"></p>
+            <dl id="research-features" class="research-features"></dl>
+          </details>
+          <div id="research-warnings" class="run-warnings"></div>
+        </div>
+        <details class="research-evidence" open>
+          <summary>
+            冻结历史实验的回测证据 <span>探索性，不是前瞻验证</span>
+          </summary>
+          <p
+            id="evidence-status"
+            class="notice"
+            role="status"
+            aria-live="polite"
+          >
+            正在读取历史证据…
+          </p>
+          <button id="evidence-retry" class="text-button" type="button" hidden>
+            重试读取证据
+          </button>
+          <div id="evidence-content" hidden>
+            <p id="evidence-caption"></p>
+            <div
+              class="evidence-table-scroll"
+              tabindex="0"
+              role="region"
+              aria-label="历史探索性回测对照表，可横向滚动"
+            >
+              <table class="evidence-table">
+                <caption>
+                  单式5+2：累计命中，不是中奖率
+                </caption>
+                <thead>
+                  <tr>
+                    <th scope="col">方案</th>
+                    <th scope="col">前区累计</th>
+                    <th scope="col">后区累计</th>
+                    <th scope="col">完整覆盖</th>
+                    <th scope="col">校正p值 前 / 后</th>
+                  </tr>
+                </thead>
+                <tbody id="evidence-rows"></tbody>
+              </table>
+            </div>
+            <p id="evidence-baseline"></p>
+            <ul id="evidence-limitations"></ul>
+            <p class="small-note">
+              该证据对应旧冻结探索，历史已经反复使用；不是新版网页或未来开奖的独立确认。当前仍不开放预测优势声明。
+            </p>
+          </div>
+        </details>
+      </section>
+
       <section id="method" class="method-section section">
         <div class="wrap method-layout">
           <div class="method-intro">
@@ -355,7 +556,7 @@
               <div>
                 <h3>先划清数据边界</h3>
                 <p>
-                  只纳入 2013
+                  只纳入 2023
                   年起、严格早于目标期的数据。校验期号、日期和号码，保留原始文件，记录来源与哈希。
                 </p>
               </div>
@@ -383,7 +584,7 @@
               <div>
                 <h3>预测优势，留待证据</h3>
                 <p>
-                  未经独立前向验证、功效分析与多重检验校正，不开放预测权重。当前预测准入关闭，不承诺中奖或收益。
+                  未经独立前向验证、功效分析与多重检验校正，不开放预测优势声明。当前预测准入关闭，不承诺中奖或收益。
                 </p>
               </div>
             </article>
@@ -414,7 +615,8 @@ python3 skills/superlotto/scripts/run_skill.py \
   --data data/numbers.csv \
   --target "${TARGET:?请先设置五位目标期号}" \
   --seed 0 --groups 5 \
-  --output outputs/result.json</pre>
+  --output outputs/result.json</pre
+            >
             <p>
               优先读取本地 CSV；文件缺失时，原版 Skill 从
               500网获取。已有文件不会被自动刷新。
@@ -456,7 +658,7 @@ python3 skills/superlotto/scripts/run_skill.py \
               >；自定义快照若缺少来源记录，会明确标记来源未核验。这不是官方完整性核验，页面不声称已收录所有开奖，不自动抓取或定时刷新。更新数据需维护者重新生成并发布快照。
             </p>
             <p>
-              网站公开独立从500网获取的2013年起历史
+              网站公开独立从500网获取的2023年起历史
               CSV、统计汇总与模型源码，支持浏览器直接计算；不发布用户选择的本地文件。本页无登录、追踪脚本或文件上传接口。首次计算从
               jsDelivr 加载固定版本 Pyodide
               运行环境，CDN会收到正常资源请求，不接收目标期、种子或 CSV 内容。

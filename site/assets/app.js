@@ -8,6 +8,7 @@ import {
 } from "./data.js";
 import { runAnalysis, cancelAnalysis } from "./engine.js";
 import { initCustomSelects } from "./select.js";
+import { initResearchUI } from "./research-ui.js";
 
 initCustomSelects();
 /** @typedef {import('./data.js').Snapshot} Snapshot */
@@ -35,6 +36,7 @@ const mode = "coverage";
 let csvReadVersion = 0;
 let activeRun = 0;
 let busy = false;
+/** @type {"analysis"|"research"|null} */ let activeTask = null;
 let csvReading = false;
 let selected = 0;
 let selectedNumber = 1;
@@ -269,6 +271,7 @@ async function loadSnapshot() {
       el("data-detail").textContent =
         `${snapshot.history.first_id}–${snapshot.history.last_id} · ${snapshot.history.rows.toLocaleString("zh-CN")} 期 · 非实时`;
     el("load-status").textContent = "";
+    researchUI.sourceChanged();
     renderPortfolio();
   } catch (error) {
     el("load-status").textContent =
@@ -394,10 +397,19 @@ el("copy-command").addEventListener("click", async () => {
   }
 });
 
-/** @param {boolean} value */
-function setBusy(value) {
+/** @param {boolean} value @param {"analysis"|"research"} [task] */
+function setBusy(value, task = "analysis") {
+  activeTask = value ? task : null;
+  if (value) importVersion++;
   busy = value;
-  el("analysis-form").setAttribute("aria-busy", String(value));
+  el("analysis-form").setAttribute(
+    "aria-busy",
+    String(value && task === "analysis"),
+  );
+  el("research-form").setAttribute(
+    "aria-busy",
+    String(value && task === "research"),
+  );
   for (const id of [
     "generate",
     "target-issue",
@@ -408,13 +420,20 @@ function setBusy(value) {
     "use-public-data",
     "import-file",
     "reset",
+    "research-target",
+    "research-pool",
+    "research-generate",
   ]) {
     /** @type {HTMLInputElement|HTMLButtonElement|HTMLSelectElement} */ (
       el(id)
     ).disabled = value;
   }
-  el("cancel-run").hidden = !value;
-  el("generate").textContent = value ? "正在计算…" : "生成组合 →";
+  el("cancel-run").hidden = !(value && task === "analysis");
+  el("research-cancel").hidden = !(value && task === "research");
+  el("generate").textContent =
+    value && task === "analysis" ? "正在计算…" : "生成组合 →";
+  el("research-generate").textContent =
+    value && task === "research" ? "正在研究…" : "运行实验 →";
 }
 el("analysis-form").addEventListener("submit", async (event) => {
   event.preventDefault();
@@ -477,6 +496,7 @@ el("analysis-form").addEventListener("submit", async (event) => {
   }
 });
 el("cancel-run").addEventListener("click", () => {
+  if (activeTask !== "analysis") return;
   activeRun++;
   cancelAnalysis();
   setBusy(false);
@@ -504,6 +524,7 @@ el("csv-file").addEventListener("change", async () => {
   const id = ++csvReadVersion;
   csvReading = true;
   /** @type {HTMLButtonElement} */ (el("generate")).disabled = true;
+  /** @type {HTMLButtonElement} */ (el("research-generate")).disabled = true;
   try {
     if (file.size > 2 * 1024 * 1024) throw new Error("CSV超过2MB上限");
     const bytes = await file.arrayBuffer();
@@ -515,10 +536,12 @@ el("csv-file").addEventListener("change", async () => {
     el("data-detail").textContent =
       `${file.name} · ${(file.size / 1024).toFixed(1)} KB · 未上传`;
     el("use-public-data").hidden = false;
+    researchUI.sourceChanged();
     el("run-status").textContent =
       "数据源已更改，点击“生成组合”完整校验并计算。下方仍保留上次结果。";
     el("run-status").className = "run-status";
   } catch (error) {
+    if (id !== csvReadVersion) return;
     el("run-status").textContent =
       `无法使用CSV：${error instanceof Error ? error.message : "读取失败"}。请使用UTF-8格式。数据源保持不变。`;
     el("run-status").className = "run-status error";
@@ -527,6 +550,8 @@ el("csv-file").addEventListener("change", async () => {
     if (id === csvReadVersion) {
       csvReading = false;
       /** @type {HTMLButtonElement} */ (el("generate")).disabled = busy;
+      /** @type {HTMLButtonElement} */ (el("research-generate")).disabled =
+        busy;
     }
   }
 });
@@ -536,11 +561,20 @@ el("use-public-data").addEventListener("click", () => {
   el("use-public-data").hidden = true;
   csvReading = false;
   /** @type {HTMLButtonElement} */ (el("generate")).disabled = busy;
+  /** @type {HTMLButtonElement} */ (el("research-generate")).disabled = busy;
   el("active-data").textContent = "使用公共历史";
   el("data-detail").textContent = snapshot
     ? `${snapshot.history.first_id}–${snapshot.history.last_id} · ${snapshot.history.rows.toLocaleString("zh-CN")}期 · 非实时`
-    : "2013年起 · 生成时校验公共历史";
+    : "2023年起 · 生成时校验公共历史";
+  researchUI.sourceChanged();
   el("run-status").textContent = "已改用公共历史。点击“生成组合”重新计算。";
   el("run-status").className = "run-status";
+});
+const researchUI = initResearchUI({
+  getCSV: () => csvText,
+  getSourceLabel: () =>
+    `${el("active-data").textContent} · ${el("data-detail").textContent}`,
+  isBusy: () => busy || csvReading,
+  setBusy: (value) => setBusy(value, "research"),
 });
 void loadSnapshot();

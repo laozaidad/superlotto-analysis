@@ -17,6 +17,9 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 MODEL_FILE = ROOT / "skills/superlotto/scripts/model.py"
+RESEARCH_FILE = MODEL_FILE.with_name("research.py")
+CONDITIONAL_FILE = MODEL_FILE.with_name("conditional_core.py")
+RUNTIME_NAMES = ("model.py", "research.py", "conditional_core.py", "history.csv", "manifest.json")
 SPEC = importlib.util.spec_from_file_location("site_source_model", MODEL_FILE)
 assert SPEC is not None and SPEC.loader is not None
 model = importlib.util.module_from_spec(SPEC)
@@ -83,16 +86,16 @@ def distributions(history: list[dict[str, Any]], zone: str, maximum: int) -> dic
 
 
 def build_snapshot(data: Path, *, generated_at: str | None = None) -> dict[str, Any]:
-    """按现有模型的2013年下限过滤，导出截至末期的描述性快照而非目标期预测。"""
+    """按现有模型的2023年下限过滤，导出截至末期的描述性快照而非目标期预测。"""
     records, audit = model.load_data(data)
     history = [row for row in records if model.within_history_scope(row)]
     if not history:
-        raise ValueError("2013-01-01起没有有效历史，不能构建网页快照")
+        raise ValueError("2023-01-01起没有有效历史，不能构建网页快照")
     source = public_source(data, audit)
     if len(history) < 100:
         source["warnings"].append("有效历史不足100期，冷热窗口使用实际样本数。")
     if history[0]["id"] != model.HISTORY_START_ISSUE:
-        source["warnings"].append("输入未从13001开始，不是2013年以来的完整范围。")
+        source["warnings"].append("输入未从23001开始，不是2023年以来的完整范围。")
     if any(
         (a["id"][:2] == b["id"][:2] and int(b["id"]) != int(a["id"]) + 1)
         or int(b["id"][:2]) > int(a["id"][:2]) + 1
@@ -141,9 +144,13 @@ def runtime_payloads(data: Path, snapshot: dict[str, Any]) -> dict[str, bytes]:
         writer.writerow([row["id"], *row["left"], *row["right"], row["date"]])
     csv_bytes = handle.getvalue().encode("utf-8")
     model_bytes = MODEL_FILE.read_bytes()
+    research_bytes = RESEARCH_FILE.read_bytes()
+    conditional_bytes = CONDITIONAL_FILE.read_bytes()
     manifest = {
         "schema_version": 1,
         "model_sha256": hashlib.sha256(model_bytes).hexdigest(),
+        "research_sha256": hashlib.sha256(research_bytes).hexdigest(),
+        "conditional_core_sha256": hashlib.sha256(conditional_bytes).hexdigest(),
         "data_sha256": hashlib.sha256(csv_bytes).hexdigest(),
         "history": {key: snapshot["history"][key] for key in (
             "rows", "first_id", "last_id", "first_date", "last_date",
@@ -153,6 +160,8 @@ def runtime_payloads(data: Path, snapshot: dict[str, Any]) -> dict[str, bytes]:
     }
     return {
         "model.py": model_bytes,
+        "research.py": research_bytes,
+        "conditional_core.py": conditional_bytes,
         "history.csv": csv_bytes,
         "manifest.json": (json.dumps(manifest, ensure_ascii=False, indent=2, allow_nan=False) + "\n").encode("utf-8"),
     }
@@ -161,14 +170,15 @@ def runtime_payloads(data: Path, snapshot: dict[str, Any]) -> dict[str, bytes]:
 def write_snapshot(data: Path, output: Path, runtime_dir: Path | None = None) -> dict[str, Any]:
     """显式构建会更新输出，单文件原子替换；运行时先写资源、最后提交清单。"""
     data, output = data.expanduser().resolve(), output.expanduser().resolve()
-    protected = {data, data.with_suffix(data.suffix + ".metadata.json"), MODEL_FILE.resolve()}
+    protected = {data, data.with_suffix(data.suffix + ".metadata.json"),
+                 MODEL_FILE.resolve(), RESEARCH_FILE.resolve(), CONDITIONAL_FILE.resolve()}
     if output in protected or output.suffix != ".json":
         raise ValueError("输出必须为独立的.json文件，不能覆盖输入CSV、来源侧车或原模型")
     destinations = [output]
     runtime_paths: dict[str, Path] = {}
     if runtime_dir is not None:
         runtime_dir = runtime_dir.expanduser().resolve()
-        runtime_paths = {name: (runtime_dir / name).resolve() for name in ("model.py", "history.csv", "manifest.json")}
+        runtime_paths = {name: (runtime_dir / name).resolve() for name in RUNTIME_NAMES}
         destinations.extend(runtime_paths.values())
     if len(set(destinations)) != len(destinations) or any(path in protected for path in destinations):
         raise ValueError("运行时输出路径冲突，不能覆盖输入CSV、来源侧车、快照或原模型")
@@ -202,7 +212,7 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--data", required=True, type=Path, help="用户已确认可公开的CSV；不会自动联网获取")
     parser.add_argument("--output", required=True, type=Path, help="静态网站JSON，显式构建会原子更新该文件")
-    parser.add_argument("--runtime-dir", type=Path, help="可选浏览器运行时目录，公开2013年起历史CSV、原模型及哈希清单")
+    parser.add_argument("--runtime-dir", type=Path, help="可选浏览器运行时目录，公开2023年起历史CSV、原模型及哈希清单")
     args = parser.parse_args(argv)
     try:
         result = write_snapshot(args.data, args.output, args.runtime_dir)

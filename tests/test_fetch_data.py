@@ -187,14 +187,14 @@ class SaveTests(unittest.TestCase):
         self.assertFalse(self.output.exists())
 
     def test_invalid_target_and_empty_cutoff(self) -> None:
-        for target in ('2612', 'abcde', '13001'):
+        for target in ('2612', 'abcde', '23001'):
             with self.assertRaises(fetch.FetchError):
                 fetch.fetch_data(self.output, target=target, html_path=FIXTURE)
 
-    def test_2013_floor_cannot_be_overridden(self) -> None:
+    def test_2023_floor_cannot_be_overridden(self) -> None:
         with patch.object(fetch, "read_url") as network:
-            with self.assertRaisesRegex(fetch.FetchError, "2013"):
-                fetch.fetch_data(self.output, start="12154")
+            with self.assertRaisesRegex(fetch.FetchError, "2023"):
+                fetch.fetch_data(self.output, start="22154")
             network.assert_not_called()
         self.assertFalse(self.output.exists())
 
@@ -204,16 +204,16 @@ class SaveTests(unittest.TestCase):
             right = ''.join(f'<td class="cfont4">{n}</td>' for n in (2, 9))
             return f'<tr><td>{identity}</td>{left}{right}<td>{day}</td></tr>'
         page = Path(self.temp.name) / 'synthetic.html'
-        page.write_text('<table><tbody id="tdata">' + row('12154', '2012-12-31')
-                        + row('13001', '2013-01-01') + '</tbody></table>')
-        result = fetch.fetch_data(self.output, target='13002', html_path=page)
-        self.assertEqual(result['first_id'], '13001')
-        self.assertEqual(result['requested_start'], '13001')
-        self.assertEqual(result['history_start_date'], '2013-01-01')
+        page.write_text('<table><tbody id="tdata">' + row('22154', '2022-12-31')
+                        + row('23001', '2023-01-01') + '</tbody></table>')
+        result = fetch.fetch_data(self.output, target='23002', html_path=page)
+        self.assertEqual(result['first_id'], '23001')
+        self.assertEqual(result['requested_start'], '23001')
+        self.assertEqual(result['history_start_date'], '2023-01-01')
         self.assertEqual(result['rows'], 1)
         self.assertEqual(result['filtered_rows'], 1)
         with self.output.open(encoding='utf-8-sig') as handle:
-            self.assertEqual([r['No.'] for r in csv.DictReader(handle)], ['13001'])
+            self.assertEqual([r['No.'] for r in csv.DictReader(handle)], ['23001'])
 
 
 class NetworkTests(unittest.TestCase):

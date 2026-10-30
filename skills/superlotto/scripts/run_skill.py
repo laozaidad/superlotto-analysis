@@ -18,13 +18,16 @@ def data_quality(history: list[dict[str, Any]], target: str) -> dict[str, Any]:
     warnings = []
     if len(history) < 100:
         warnings.append(f"只有{len(history)}期历史，少于默认100期窗口；按实际期数计算，不补造数据。")
+    if history[0]["id"] != model.HISTORY_START_ISSUE:
+        warnings.append("有效历史未从23001开始，不能视为2023年以来的完整数据。")
     missing = []
     for previous, current in zip(history, history[1:]):
         a, b = previous["id"], current["id"]
-        if a[:2] == b[:2] and int(b[2:]) != int(a[2:]) + 1:
+        if ((a[:2] == b[:2] and int(b[2:]) != int(a[2:]) + 1)
+                or int(b[:2]) > int(a[:2]) + 1):
             missing.append({"after": a, "before": b})
     if missing:
-        warnings.append("存在同年期号缺口；频率窗口和遗漏按已有记录计数，不代表连续实际期数。")
+        warnings.append("存在同年或整年期号缺口；频率窗口和遗漏按已有记录计数，不代表连续实际期数。")
     last_id = history[-1]["id"]
     predecessor_present = int(target[2:]) > 1 and int(last_id) == int(target) - 1
     if int(target[2:]) > 1 and not predecessor_present:
@@ -72,7 +75,7 @@ def write_new_json(path: Path, payload: str) -> None:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--data", type=Path, default=Path("data/numbers.csv"))
-    parser.add_argument("--target", required=True, help="五位目标期号；只使用2013年起且严格早于该期的数据")
+    parser.add_argument("--target", required=True, help="五位目标期号；只使用2023年起且严格早于该期的数据")
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--groups", type=int, default=5)
     parser.add_argument("--mode", choices=("uniform", "coverage"), default=model.DEFAULT_MODE)
@@ -81,6 +84,8 @@ def main(argv: list[str] | None = None) -> int:
     # Reject invalid requests before any network or output side effect.
     if len(args.target) != 5 or not args.target.isascii() or not args.target.isdigit() or int(args.target[2:]) < 1:
         parser.error("target必须为有效五位期号且年内序号大于0")
+    if int(args.target) <= int(model.HISTORY_START_ISSUE):
+        parser.error("2023-01-01起且目标期之前没有历史数据；目标必须晚于23001")
     if args.groups < 1 or (args.mode == "coverage" and args.groups > 6):
         parser.error("groups必须为正数；coverage最多6组")
     if args.output and args.output.exists():

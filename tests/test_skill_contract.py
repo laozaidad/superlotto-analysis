@@ -21,7 +21,8 @@ class SkillContractTests(unittest.TestCase):
 
     def test_required_portable_resources(self):
         for name in ("scripts/run_skill.py", "scripts/model.py", "scripts/fetch_data.py",
-                     "references/data-schema.md", "references/methodology.md"):
+                     "scripts/run_research.py", "scripts/research.py", "scripts/conditional_core.py",
+                     "references/data-schema.md", "references/methodology.md", "references/research.md"):
             self.assertTrue((SKILL / name).is_file(), name)
         for path in SKILL.rglob("*"):
             if path.suffix in {".md", ".py", ".yaml"}:

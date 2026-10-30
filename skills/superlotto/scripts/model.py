@@ -14,8 +14,8 @@ import random
 import re
 
 DEFAULT_MODE = "coverage"
-HISTORY_START_DATE = "2013-01-01"
-HISTORY_START_ISSUE = "13001"
+HISTORY_START_DATE = "2023-01-01"
+HISTORY_START_ISSUE = "23001"
 SPACE_SIZE = math.comb(35, 5) * math.comb(12, 2)
 WARNING = (
     "仅为可复现的数据描述与组合设计，不构成购彩建议。"
@@ -106,19 +106,19 @@ def load_data(path):
 
 
 def within_history_scope(record):
-    """按源日期的日历年截断，不让时区偏移把2013新年记录排到2012。"""
+    """按源日期的日历年截断，不让时区偏移把2023新年记录排到2022。"""
     source_date = datetime.fromisoformat(record["date"].replace("Z", "+00:00")).date().isoformat()
     return source_date >= HISTORY_START_DATE and int(record["id"]) >= int(HISTORY_START_ISSUE)
 
 
 def select_history(records, target):
-    """仅选择2013年起且目标期之前的数据；旧期与未来期只做源审计。"""
+    """仅选择2023年起且目标期之前的数据；旧期与未来期只做源审计。"""
     target = str(target)
     if re.fullmatch(r"[0-9]{5}", target) is None or int(target[2:]) < 1:
         raise ValueError("目标期号必须为五位数字")
     history = [record for record in records if within_history_scope(record) and int(record["id"]) < int(target)]
     if not history:
-        raise ValueError("2013-01-01起且目标期之前没有历史数据")
+        raise ValueError("2023-01-01起且目标期之前没有历史数据")
     return history, {
         "target": target, "training_rows": len(history),
         "history_start_date": HISTORY_START_DATE, "history_start_issue": HISTORY_START_ISSUE,
@@ -126,7 +126,7 @@ def select_history(records, target):
         "training_last_id": history[-1]["id"],
         "excluded_before_start": sum(not within_history_scope(record) for record in records),
         "excluded_future": sum(int(record["id"]) >= int(target) for record in records),
-        "exclusion_definition": "2013年以前或期号不早于目标期的记录只参与源文件完整性审计，不参与模型。",
+        "exclusion_definition": "2023年以前或期号不早于目标期的记录只参与源文件完整性审计，不参与模型。",
     }
 
 
@@ -210,7 +210,7 @@ def generate_portfolio(records, seed=0, groups=5, mode="uniform"):
     """生成示例组合；uniform 为均匀基线，coverage 只优化覆盖和形态差异。"""
     records = [record for record in records if within_history_scope(record)]
     if not records:
-        raise ValueError("必须提供2013-01-01起且目标期之前的历史")
+        raise ValueError("必须提供2023-01-01起且目标期之前的历史")
     if type(groups) is not int or groups < 1:
         raise ValueError("groups 必须为正整数")
     if mode not in ("uniform", "coverage"):
@@ -309,7 +309,7 @@ def main(argv=None):
     """CLI 只向 stdout 输出一份稳定 JSON，不写入或修改任何文件。"""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--data", required=True, type=Path)
-    parser.add_argument("--target", required=True, help="五位目标期号；只使用2013年起且严格早于该期的数据")
+    parser.add_argument("--target", required=True, help="五位目标期号；只使用2023年起且严格早于该期的数据")
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--groups", type=int, default=5)
     parser.add_argument("--mode", choices=("uniform", "coverage"), default=DEFAULT_MODE)

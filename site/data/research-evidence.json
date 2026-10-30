@@ -1,0 +1,199 @@
+{
+  "schema_version": 1,
+  "scope": {
+    "start_issue": "23001",
+    "start_date": "2023-01-01"
+  },
+  "test": {
+    "first_id": "26001",
+    "last_id": "26123",
+    "periods": 123
+  },
+  "status": "exploratory_no_advantage",
+  "prediction_gate": "CLOSED",
+  "historical_data_previously_seen": true,
+  "verification": "recomputed_from_saved_walk_forward",
+  "source_hashes": {
+    "original_results": "242fd42a16163375daca5d5c02ca04436f8e367e60e96daee4f3c74369d6e7c0",
+    "original_walk_forward": "ebac0d8fba4e7f061c56d46a111e399d62c38f8349fbf281e9a58c76469a036a",
+    "original_protocol": "f4330427b6ecf3e13766f213352c7d3bdd29acf4831307ce1a7a48992f6c8a17",
+    "data": "da5dc9d68b67656a82d5e3c23781f488483418084d5ed51eb18c18a92874b4c1",
+    "public_study": "8b02e9c07e33a4c531d1f6792fb59edd8a6ff7cf7a97d6bd84e031df5d301388"
+  },
+  "random_expected": {
+    "left": 87.85714285714286,
+    "right": 41.0
+  },
+  "comparisons": [
+    {
+      "variant": "equal_rank_fusion",
+      "label": "等权融合",
+      "size": "5+2",
+      "left_hits": 85,
+      "right_hits": 40,
+      "full_coverage_count": 0,
+      "n": 123,
+      "p_left": 0.6563729931070609,
+      "p_right": 0.6003190828954759,
+      "p_left_adjusted": 1.0,
+      "p_right_adjusted": 1.0
+    },
+    {
+      "variant": "conditional_no_dedup",
+      "label": "条件权重",
+      "size": "5+2",
+      "left_hits": 81,
+      "right_hits": 45,
+      "full_coverage_count": 0,
+      "n": 123,
+      "p_left": 0.8161134058857625,
+      "p_right": 0.26185644057691965,
+      "p_left_adjusted": 1.0,
+      "p_right_adjusted": 1.0
+    },
+    {
+      "variant": "conditional_dedup",
+      "label": "条件权重＋软去冗余",
+      "size": "5+2",
+      "left_hits": 91,
+      "right_hits": 36,
+      "full_coverage_count": 0,
+      "n": 123,
+      "p_left": 0.36915908760399013,
+      "p_right": 0.8381546644766804,
+      "p_left_adjusted": 1.0,
+      "p_right_adjusted": 1.0
+    }
+  ],
+  "all_tests": [
+    {
+      "variant": "equal_rank_fusion",
+      "label": "等权融合",
+      "size": "5+2",
+      "left_hits": 85,
+      "right_hits": 40,
+      "full_coverage_count": 0,
+      "n": 123,
+      "p_left": 0.6563729931070609,
+      "p_right": 0.6003190828954759,
+      "p_left_adjusted": 1.0,
+      "p_right_adjusted": 1.0
+    },
+    {
+      "variant": "equal_rank_fusion",
+      "label": "等权融合",
+      "size": "7+3",
+      "left_hits": 124,
+      "right_hits": 64,
+      "full_coverage_count": 0,
+      "n": 123,
+      "p_left": 0.47537363024942225,
+      "p_right": 0.37519465342803177,
+      "p_left_adjusted": 1.0,
+      "p_right_adjusted": 1.0
+    },
+    {
+      "variant": "equal_rank_fusion",
+      "label": "等权融合",
+      "size": "8+3",
+      "left_hits": 138,
+      "right_hits": 64,
+      "full_coverage_count": 0,
+      "n": 123,
+      "p_left": 0.6208263388528613,
+      "p_right": 0.37519465342803177,
+      "p_left_adjusted": 1.0,
+      "p_right_adjusted": 1.0
+    },
+    {
+      "variant": "conditional_no_dedup",
+      "label": "条件权重",
+      "size": "5+2",
+      "left_hits": 81,
+      "right_hits": 45,
+      "full_coverage_count": 0,
+      "n": 123,
+      "p_left": 0.8161134058857625,
+      "p_right": 0.26185644057691965,
+      "p_left_adjusted": 1.0,
+      "p_right_adjusted": 1.0
+    },
+    {
+      "variant": "conditional_no_dedup",
+      "label": "条件权重",
+      "size": "7+3",
+      "left_hits": 126,
+      "right_hits": 62,
+      "full_coverage_count": 0,
+      "n": 123,
+      "p_left": 0.3913403294711792,
+      "p_right": 0.4958854471097541,
+      "p_left_adjusted": 1.0,
+      "p_right_adjusted": 1.0
+    },
+    {
+      "variant": "conditional_no_dedup",
+      "label": "条件权重",
+      "size": "8+3",
+      "left_hits": 142,
+      "right_hits": 62,
+      "full_coverage_count": 0,
+      "n": 123,
+      "p_left": 0.45942983725164566,
+      "p_right": 0.4958854471097541,
+      "p_left_adjusted": 1.0,
+      "p_right_adjusted": 1.0
+    },
+    {
+      "variant": "conditional_dedup",
+      "label": "条件权重＋软去冗余",
+      "size": "5+2",
+      "left_hits": 91,
+      "right_hits": 36,
+      "full_coverage_count": 0,
+      "n": 123,
+      "p_left": 0.36915908760399013,
+      "p_right": 0.8381546644766804,
+      "p_left_adjusted": 1.0,
+      "p_right_adjusted": 1.0
+    },
+    {
+      "variant": "conditional_dedup",
+      "label": "条件权重＋软去冗余",
+      "size": "7+3",
+      "left_hits": 121,
+      "right_hits": 56,
+      "full_coverage_count": 0,
+      "n": 123,
+      "p_left": 0.6028460259644938,
+      "p_right": 0.8226021085864034,
+      "p_left_adjusted": 1.0,
+      "p_right_adjusted": 1.0
+    },
+    {
+      "variant": "conditional_dedup",
+      "label": "条件权重＋软去冗余",
+      "size": "8+3",
+      "left_hits": 132,
+      "right_hits": 56,
+      "full_coverage_count": 0,
+      "n": 123,
+      "p_left": 0.8229112685236547,
+      "p_right": 0.8226021085864034,
+      "p_left_adjusted": 1.0,
+      "p_right_adjusted": 1.0
+    }
+  ],
+  "multiple_testing": {
+    "method": "Bonferroni",
+    "family_size": 66
+  },
+  "limitations": [
+    "这是既有2026年123期探索性研究，历史已多次使用，不是新盲测，也不是本次部署后的验证。",
+    "本次从存档逐期号码重算命中、同期全覆盖和超几何零假设上尾p；不是重新训练原研究流程。",
+    "比较族沿用原研究累计66项；校正不能消除未记录的跨轮选参和研究者自由度。",
+    "前区累计91、后区36不表示全中或收益；完整方案没有检出优于同规模随机的证据。",
+    "表中单式随机期望只适用于5+2；5+5未在这份旧研究中测试，不能外推。",
+    "第三方历史数据并非全量官方认证；本工具不计算奖级、奖金或收益率。"
+  ]
+}

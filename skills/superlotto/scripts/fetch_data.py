@@ -24,8 +24,8 @@ HISTORY_URL = "https://datachart.500.com/dlt/history/history.shtml"
 DATA_URL = "https://datachart.500.com/dlt/history/newinc/history.php"
 HEADERS = ["No.", "L1", "L2", "L3", "L4", "L5", "R1", "R2", "Date"]
 MAX_RESPONSE_BYTES = 20 * 1024 * 1024
-HISTORY_START_DATE = "2013-01-01"
-HISTORY_START_ISSUE = "13001"
+HISTORY_START_DATE = "2023-01-01"
+HISTORY_START_ISSUE = "23001"
 
 
 class FetchError(ValueError):
@@ -222,7 +222,7 @@ def fetch_data(output: str | Path, target: str | None = None, start: str = HISTO
         raise FetchError("输出CSV或来源metadata已存在；默认不覆盖，可显式使用--overwrite")
     start = validate_issue(start, "起始期号")
     if int(start) < int(HISTORY_START_ISSUE):
-        raise FetchError("只考虑2013-01-01以来的数据，起始期号不得早于13001")
+        raise FetchError("只考虑2023-01-01以来的数据，起始期号不得早于23001")
     if target is not None:
         target = validate_issue(str(target), "目标期号")
     if end is not None:
@@ -352,7 +352,7 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--target")
-    parser.add_argument("--start", default=HISTORY_START_ISSUE, help="起始期号，固定下限13001")
+    parser.add_argument("--start", default=HISTORY_START_ISSUE, help="起始期号，固定下限23001")
     parser.add_argument("--end")
     parser.add_argument("--html", type=Path)
     parser.add_argument("--overwrite", action="store_true")

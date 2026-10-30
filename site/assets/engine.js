@@ -1,5 +1,6 @@
 /** 浏览器内的原版 Python 模型入口；不把参数或 CSV 发往服务器。 */
 /** @typedef {{target:string,seed:number,groups:number,mode:'coverage'|'uniform',csvText?:string}} AnalysisParameters */
+/** @typedef {{target:string,poolSize:"5+2"|"5+5"|"7+3"|"8+3",csvText?:string}} ResearchParameters */
 /** @typedef {Record<string, any>} AnalysisResult */
 /** @typedef {{id:number,resolve:(value:AnalysisResult)=>void,reject:(error:Error)=>void,progress:(text:string)=>void,timer:ReturnType<typeof setTimeout>}} Pending */
 
@@ -26,9 +27,9 @@ export function validateParameters(params) {
     Number(params.target.slice(2)) < 1
   )
     throw new Error("目标期号必须为五位数字，且年内序号大于0");
-  if (Number(params.target) <= 13001)
+  if (Number(params.target) <= 23001)
     throw new Error(
-      "2013-01-01起且目标期之前没有历史数据；目标期必须晚于13001",
+      "2023-01-01起且目标期之前没有历史数据；目标期必须晚于23001",
     );
   if (!Number.isSafeInteger(params.seed))
     throw new Error("随机种子必须是安全整数");
@@ -76,14 +77,41 @@ export function cancelAnalysis() {
   fail(new Error("推演已取消，保留上一次有效结果"));
 }
 
+/** @param {ResearchParameters} params @returns {ResearchParameters} */
+export function validateResearchParameters(params) {
+  if (!params || !["5+2", "5+5", "7+3", "8+3"].includes(params.poolSize))
+    throw new Error("研究号码池必须为5+2、5+5、7+3或8+3");
+  const common = validateParameters({
+    target: params.target,
+    seed: 0,
+    groups: 1,
+    mode: "uniform",
+    ...(params.csvText !== undefined ? { csvText: params.csvText } : {}),
+  });
+  return {
+    target: common.target,
+    poolSize: params.poolSize,
+    ...(common.csvText !== undefined ? { csvText: common.csvText } : {}),
+  };
+}
 /** @param {AnalysisParameters} params @param {(text:string)=>void} [onProgress] @returns {Promise<AnalysisResult>} */
 export function runAnalysis(params, onProgress = () => {}) {
-  let clean;
   try {
-    clean = validateParameters(params);
+    return launch(validateParameters(params), "analysis", onProgress);
   } catch (error) {
     return Promise.reject(error);
   }
+}
+/** @param {ResearchParameters} params @param {(text:string)=>void} [onProgress] @returns {Promise<AnalysisResult>} */
+export function runResearch(params, onProgress = () => {}) {
+  try {
+    return launch(validateResearchParameters(params), "research", onProgress);
+  } catch (error) {
+    return Promise.reject(error);
+  }
+}
+/** @param {AnalysisParameters|ResearchParameters} clean @param {'analysis'|'research'} task @param {(text:string)=>void} onProgress @returns {Promise<AnalysisResult>} */
+function launch(clean, task, onProgress) {
   if (pending)
     return Promise.reject(new Error("已有推演正在进行，请等待完成或先取消"));
   if (typeof Worker === "undefined")
@@ -154,7 +182,7 @@ export function runAnalysis(params, onProgress = () => {}) {
         ),
       };
       onProgress("准备浏览器计算引擎；首次需下载 Python 运行时…");
-      worker.postMessage({ type: "run", id, params: clean });
+      worker.postMessage({ type: "run", task, id, params: clean });
     } catch (error) {
       const reason = error instanceof Error ? error : new Error(String(error));
       if (pending) fail(reason);

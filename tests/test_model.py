@@ -83,11 +83,11 @@ class LoaderTests(unittest.TestCase):
 
     def test_preserves_period_string_and_iso(self):
         data = records()
-        data[0]["id"] = "13001"
-        data[0]["date"] = "2013-01-02T00:00:00.000Z"
+        data[0]["id"] = "23001"
+        data[0]["date"] = "2023-01-02T00:00:00.000Z"
         write_csv(self.path, data)
         actual, audit = model.load_data(self.path)
-        self.assertEqual(actual[0]["id"], "13001")
+        self.assertEqual(actual[0]["id"], "23001")
         self.assertEqual(audit["iso_timestamp_rows"], 1)
         self.assertEqual(len(audit["source_sha256"]), 64)
 
@@ -162,7 +162,7 @@ class PortfolioTests(unittest.TestCase):
         reference = model.generate_portfolio(current, seed=0, mode="coverage")
         # An old record matching a generated group must not enter historical exclusions.
         group = reference["groups"][0]
-        old = {"id": "12154", "date": "2012-12-31", "left": tuple(group["left"]),
+        old = {"id": "22154", "date": "2022-12-31", "left": tuple(group["left"]),
                "right": tuple(group["right"])}
         mixed = [old, *current]
         self.assertEqual(model.generate_portfolio(mixed, seed=0, mode="coverage"), reference)
@@ -171,17 +171,17 @@ class PortfolioTests(unittest.TestCase):
         self.assertEqual(audit["excluded_before_start"], 1)
         self.assertEqual(audit["excluded_future"], 1)
         self.assertEqual(audit["training_first_id"], "26001")
-        with self.assertRaisesRegex(ValueError, "2013"):
+        with self.assertRaisesRegex(ValueError, "2023"):
             model.generate_portfolio([old])
 
     def test_inclusive_calendar_date_and_early_target(self):
-        new_year = {"id": "13001", "date": "2013-01-01T00:00:00+08:00",
+        new_year = {"id": "23001", "date": "2023-01-01T00:00:00+08:00",
                     "left": (1, 4, 10, 22, 30), "right": (2, 9)}
-        selected, audit = model.select_history([new_year], "13002")
+        selected, audit = model.select_history([new_year], "23002")
         self.assertEqual(selected, [new_year])
-        self.assertEqual(audit["history_start_date"], "2013-01-01")
-        for target in ("12154", "13001"):
-            with self.subTest(target=target), self.assertRaisesRegex(ValueError, "2013"):
+        self.assertEqual(audit["history_start_date"], "2023-01-01")
+        for target in ("22154", "23001"):
+            with self.subTest(target=target), self.assertRaisesRegex(ValueError, "2023"):
                 model.select_history([new_year], target)
 
     def test_uniform_deterministic_and_legal(self):

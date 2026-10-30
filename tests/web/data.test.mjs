@@ -13,7 +13,7 @@ import {
 
 test("CSV解码保留BOM与CRLF，重编码字节及审计哈希不改变", () => {
   const bytes = new TextEncoder().encode(
-    "\uFEFFNo.,Date\r\n13001,2013-01-02\r\n",
+    "\uFEFFNo.,Date\r\n23001,2023-01-02\r\n",
   );
   const decoded = decodeCsv(bytes.buffer);
   assert.equal(decoded.charCodeAt(0), 0xfeff);
@@ -32,8 +32,8 @@ function localResult() {
   return {
     ...clone(snapshot.portfolios.coverage),
     cutoff: {
-      history_start_date: "2013-01-01",
-      history_start_issue: "13001",
+      history_start_date: "2023-01-01",
+      history_start_issue: "23001",
       target: "26999",
       training_first_id: snapshot.history.first_id,
       training_last_id: snapshot.history.last_id,
@@ -41,7 +41,7 @@ function localResult() {
     },
   };
 }
-test("公开快照通过结构与2013范围校验，两种模式独立有效", () => {
+test("公开快照通过结构与2023范围校验，两种模式独立有效", () => {
   assert.equal(validateSnapshot(snapshot).schema_version, 1);
   for (const mode of ["uniform", "coverage"])
     assert.equal(validatePortfolio(snapshot.portfolios[mode]).mode, mode);
@@ -53,7 +53,7 @@ test("本地结果需带目标期截断审计", () => {
     /JSON 必须为对象/,
   );
 });
-test("拒绝目标期与历史重叠及2013以前范围", () => {
+test("拒绝目标期与历史重叠及2023以前范围", () => {
   const r = localResult();
   r.cutoff.target = r.cutoff.training_last_id;
   assert.throws(() => parseLocalResult(JSON.stringify(r)), /截断不合法/);
@@ -61,8 +61,8 @@ test("拒绝目标期与历史重叠及2013以前范围", () => {
   r.cutoff.training_first_id = "12001";
   assert.throws(() => parseLocalResult(JSON.stringify(r)), /截断不合法/);
   const p = clone(snapshot.portfolios.coverage);
-  p.history_start_date = "2023-01-01";
-  assert.throws(() => validatePortfolio(p), /2013/);
+  p.history_start_date = "2013-01-01";
+  assert.throws(() => validatePortfolio(p), /2023/);
 });
 test("拒绝声称预测优势、重复和越界号码、伪造覆盖", () => {
   for (const mutate of [
@@ -159,7 +159,7 @@ test("非法日历日期、期号年份不一致和样本窗口矛盾被拒绝",
   s.history.first_date = "9999-99-99";
   s.history.last_date = "9999-99-99";
   assert.throws(() => validateSnapshot(s), /日期/);
-  s.history.first_date = "2013-02-30";
+  s.history.first_date = "2023-02-30";
   assert.throws(() => validateSnapshot(s), /日期/);
   const r = localResult();
   r.cutoff.training_rows = 1;
