@@ -12,3 +12,6 @@ outputs/
 htmlcov/
 .env
 .env.*
+node_modules/
+!site/data/
+!site/data/snapshot.json

@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "model_sha256": "dc28c7b4272f94510a782ba40c292169df842f94d67040b2b762869a16a17688",
+  "data_sha256": "aefd0f809c780e18792bde4b0f1ed3f7559613bd3382d437b3563356de083495",
+  "history": {
+    "rows": 2080,
+    "first_id": "13001",
+    "last_id": "26123",
+    "first_date": "2013-01-02",
+    "last_date": "2026-10-28",
+    "history_start_date": "2013-01-01",
+    "history_start_issue": "13001"
+  },
+  "source": {
+    "url": "https://datachart.500.com/dlt/history/history.shtml",
+    "sha256": "aa25ae57e05a4efaac120de9ed43023b0917e6581686cc85f4b4ce0270b8e616",
+    "complete": false,
+    "provenance_hash_matches": true,
+    "warnings": [
+      "静态快照，不是实时开奖数据；第三方数据未与官方开奖源交叉核验。",
+      "仅验证输入结构与范围，不保证每年末期或全历史无缺漏。",
+      "完整号码跨期重复；保留原始记录，不等同于重复期号。",
+      "来源侧车与CSV哈希匹配，但不构成来源真实性的独立认证。"
+    ],
+    "retrieved_at": "2026-10-30T07:29:23.306573+00:00"
+  }
+}

@@ -1,0 +1,83 @@
+name: Deploy analysis website
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+
+jobs:
+  validate-and-package:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install validation dependencies
+        run: |
+          python -m pip install -r requirements-dev.txt
+          npm ci
+      - name: Validate Python model and exporter
+        run: |
+          ruff check .
+          mypy
+          python -m unittest discover -s tests -v
+      - name: Validate website
+        run: |
+          npm run check
+          npm test
+          test -f site/index.html
+          test -f site/data/snapshot.json
+      - name: Verify browser runtime model and data
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          runtime = Path('site/runtime')
+          manifest = json.loads((runtime / 'manifest.json').read_text(encoding='utf-8'))
+          model = (runtime / 'model.py').read_bytes()
+          history = (runtime / 'history.csv').read_bytes()
+          canonical = Path('skills/superlotto/scripts/model.py').read_bytes()
+          assert manifest['schema_version'] == 1, 'Unsupported runtime manifest'
+          assert model == canonical, 'Browser model differs from canonical Python model'
+          assert hashlib.sha256(model).hexdigest() == manifest['model_sha256'], 'Model hash mismatch'
+          assert hashlib.sha256(history).hexdigest() == manifest['data_sha256'], 'History hash mismatch'
+          print('Browser runtime matches canonical model and manifest hashes')
+          PY
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+      - name: Upload only public website files
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: site
+
+  deploy:
+    needs: validate-and-package
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

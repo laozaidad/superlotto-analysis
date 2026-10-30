@@ -8,12 +8,67 @@
 
 **可靠指数据处理与计算可验证，不代表可以预测开奖。** 独立均匀假设下，每个固定完整组合全中概率都是 `1 / 21,425,712`。冷热、遗漏和形态分数不是中奖置信度，不构成购彩建议。
 
+## 网页分析与推演
+
+[打开大乐透选号分析网页](https://laozaidad.github.io/superlotto-analysis/)
+
+网页使用 GitHub Pages 托管，可查看历史统计，也可**在浏览器中实际运行本仓库原版 Python 模型**。计算由独立的 module worker 执行，不另写一套 JavaScript 选号算法，不需要自建服务器或登录账户。
+
+### 在网页上生成
+
+1. 填写**五位目标期号**，不预设某一期；输入随机种子（默认0）与组数（1–6组），选择分散覆盖或均匀抽样。
+2. 使用已发布的公共历史，或选择本地 CSV。网页仅纳入2013-01-01起且严格早于目标期的有效记录；本地文件无效时会报错，不偷偷换成公共数据。
+3. 点击生成，浏览器执行原版模型，显示实际训练截止期、号码、形态特征和冷热。更改参数不会悄悄重算，需要再次点击生成；固定种子用于复现，不代表概率优势。
+4. 可下载新计算的 JSON，也可导入已有 Skill JSON 查看。初始 `site/data/snapshot.json` 只是展示基准，不代替点击生成时的实际计算。
+
+**首次运行需要联网加载 Python WebAssembly 运行时。** 页面固定使用 [Pyodide 314.0.7](https://pyodide.org/en/stable/usage/webworker.html)，从 jsDelivr 下载；首次加载可能较慢，界面提供进度状态、失败重试与取消。取消会停止当前 worker，后续生成可重新初始化。浏览器须支持 WebAssembly 和 module worker；运行时下载失败时不会以预存组合冒充计算结果，仍可使用本地 Python CLI。
+
+### 数据、隐私与边界
+
+- **公共历史不是实时数据。** `site/runtime/history.csv` 是为网页独立从500网获取的2013年以来公开历史，不是用户的私人 CSV。页面标明实际截止范围；500网是第三方数据源，抓取成功不等于官方认证或全历史无缺漏。
+- **原模型与数据可核对。** `site/runtime/model.py` 与 `skills/superlotto/scripts/model.py` 逐字节一致；`site/runtime/manifest.json` 记录模型和网页历史 CSV 的 SHA-256。worker 在计算前校验这些文件，失败则停止。哈希验证的是文件一致性，不是开奖来源真实性。
+- **本地 CSV、JSON 不上传。** 应用仅在当前浏览器中读取所选文件和计算；不会把文件内容发送给 GitHub、jsDelivr 或500网。页面与公共数据仍从 GitHub Pages 下载，Python 运行时从 jsDelivr 下载，因此首次使用不是完全离线，也会向这些服务发起普通资源请求。
+- **不直接抓500网，不自动更新。** 网页使用已发布的公共 CSV，或用户明确选择的本地 CSV；不会跨域抓取500网、自动刷新已发布历史或定时获取数据。需要更近期数据时导入自己的合规 CSV，或由维护者显式更新公开版本。
+- **仅发布 `site/`。** 发布内容包括网页、展示快照、独立公共历史、原版模型和清单；用户工作目录、私人 CSV、个人路径与验证日志不随网页发布。生成结果仍是组合设计，不是已经证实的开奖预测。
+
+### 本地预览
+
+在仓库根目录启动静态服务，然后访问 `http://localhost:8000`；不要直接双击 HTML，以免浏览器限制模块和 JSON 加载。
+
+```bash
+python3 -m http.server 8000 --bind 127.0.0.1 --directory site
+```
+
+### 更新公共数据与运行资源
+
+更新是显式维护操作，发布 workflow 不联网抓取开奖数据。先独立获取公开数据到新目录，再从**同一份来源**同时导出展示快照和浏览器运行资源。`--runtime-dir` 会生成可公开下载的历史 CSV，必须使用明确可公开的独立数据，不能用用户私人 CSV；也不要把带个人路径的原始运行报告直接提交到 `site/`。
+
+```bash
+PUBLIC_DATA_DIR=$(mktemp -d)
+python3 skills/superlotto/scripts/fetch_data.py \
+  --output "$PUBLIC_DATA_DIR/numbers.csv" --start 13001
+python3 scripts/build_site_data.py \
+  --data "$PUBLIC_DATA_DIR/numbers.csv" \
+  --output "$PUBLIC_DATA_DIR/snapshot.json" \
+  --runtime-dir "$PUBLIC_DATA_DIR/runtime"
+```
+
+核对新文件的实际首末期、记录数、来源警告与哈希，确认没有个人信息后，将 `snapshot.json` 替换到 `site/data/snapshot.json`，并将同次生成的 `runtime/model.py`、`runtime/history.csv`、`runtime/manifest.json` 一起替换到 `site/runtime/`，不要混用不同批次。修改模型后也需重新生成运行资源，以通过部署前的一致性检查。
+
+清单中的 `data_sha256` 对应规范化后的 `site/runtime/history.csv`；`source.sha256` 对应抓取时的原 CSV，两者可能因为编码和换行规范化不同，不应混淆。原始抓取文件及其侧车可保留在维护者本地，不必另行入库。
+
+### 发布方式
+
+仓库的 **Settings → Pages → Build and deployment → Source** 选择 **GitHub Actions**。推送到 `main` 后，`Deploy analysis website` workflow 会先执行 Python 与网页检查，验证运行模型与仓库模型相同、清单哈希匹配，再仅打包 `site/` 并部署到 `github-pages` 环境；也可从 Actions 手动运行。PR 不触发网站部署，手动选择其他分支也不会发布。
+
+配置遵循 [GitHub Pages 自定义 workflow 文档](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages)。网站是否已发布，以 Actions 部署成功和实际网址可访问为准。
+
 ## 运行要求
 
-- Python **3.10+**。
-- 运行代码仅使用 Python 标准库，无需安装第三方包。
-- 有本地历史 CSV 时可以完全离线运行；没有数据时需访问 [500网大乐透历史数据](https://datachart.500.com/dlt/)。
-- 仓库不包含完整开奖数据库，不上传用户数据或固定的特定期推荐结果。
+- **命令行 Skill：** Python **3.10+**，模型仅使用标准库，无需安装第三方 Python 包。
+- 命令行有本地历史 CSV 时可以完全离线运行；没有数据时需访问 [500网大乐透历史数据](https://datachart.500.com/dlt/)。
+- **网页：** 支持 WebAssembly、module worker 的现代浏览器；首次计算需联网下载上述固定版本 Pyodide，不需要在电脑上安装 Python。
+- 仓库只发布独立获取的2013年以来公共历史，不上传用户私人数据，也不内置固定目标期推荐。
 
 ## 安装 Skill
 
@@ -104,3 +159,11 @@ python3 -m venv .venv
 ```
 
 GitHub Actions 在 Python 3.10、3.12 上执行同样的检查。单元测试默认离线；HTML夹具仅为解析测试用的少量公开历史行，不是默认历史数据库。真实网络抓取应另外验证来源、记录范围和校验结果。
+
+修改网页还需 Node.js **22.13+（22.x）**，以满足当前锁定的 ESLint 10 开发依赖。安装锁定依赖后执行类型、lint 与网页测试；这些 Node 开发依赖不打包到网页中，也不是命令行 Skill 的运行依赖：
+
+```bash
+npm ci
+npm run check
+npm test
+```

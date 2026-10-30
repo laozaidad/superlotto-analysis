@@ -1,0 +1,468 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="大乐透选号分析：2013年以来的历史数据、可复现的组合覆盖与公开透明的统计方法。统计不是预测。"
+    />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#153e35" />
+    <title>大乐透选号分析 · 看懂数据，尊重随机</title>
+    <link rel="stylesheet" href="assets/style.css" />
+    <script type="module" src="assets/app.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#analysis">跳到组合分析</a>
+    <header class="header wrap">
+      <a href="#" class="brand" aria-label="大乐透选号分析首页"
+        ><span class="brand-mark" aria-hidden="true">5<span>+2</span></span
+        ><span>大乐透选号分析<small>SUPERLOTTO / OPEN RESEARCH</small></span></a
+      >
+      <nav aria-label="主导航">
+        <a href="#analysis">组合分析</a><a href="#history">历史观察</a
+        ><a href="#method">模型方法</a>
+      </nav>
+      <a
+        class="repo-link"
+        href="https://github.com/laozaidad/superlotto-analysis"
+        target="_blank"
+        rel="noopener noreferrer"
+        >GitHub <span aria-hidden="true">↗</span></a
+      >
+    </header>
+    <main>
+      <section class="hero wrap" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="eyebrow">数据有迹可循，随机不必猜测</p>
+          <h1 id="hero-title">
+            把随机，<br />看得更清楚<span class="period">。</span>
+          </h1>
+          <p class="hero-intro">
+            填写目标期，在浏览器里生成组合。<br />原版模型、本地计算，可复现，不承诺预测。
+          </p>
+          <a class="button primary" href="#analysis"
+            >开始选号 <span aria-hidden="true">↓</span></a
+          >
+        </div>
+        <div class="hero-figure" aria-label="大乐透的两区独立选号空间">
+          <div class="figure-top">
+            <span>两区 · 一个完整组合</span><span class="mono">35 / 12</span>
+          </div>
+          <div class="number-field" id="number-field" aria-hidden="true"></div>
+          <div class="probability">
+            <span class="probability-caption">每个固定完整组合的全中概率</span
+            ><strong>1 <span>/</span> 21,425,712</strong>
+            <p>公平、均匀、两区独立的假设下，无论冷热，等概率。</p>
+          </div>
+        </div>
+      </section>
+      <section class="snapshot-strip wrap" aria-label="当前公共数据快照">
+        <div>
+          <span>分析范围</span
+          ><strong>2013 <small>年至今的已收录数据</small></strong>
+        </div>
+        <div>
+          <span>有效历史</span
+          ><strong id="history-count">— <small>期</small></strong>
+        </div>
+        <div>
+          <span>数据截至</span><strong id="history-last">读取中</strong>
+        </div>
+        <div class="snapshot-source">
+          <span class="status-dot"></span>
+          <div>
+            <b id="snapshot-source-label">公开数据快照</b
+            ><small id="snapshot-time">非实时 · 500网第三方数据</small>
+          </div>
+        </div>
+      </section>
+      <div class="wrap">
+        <p id="load-status" class="notice" role="status" aria-live="polite">
+          正在读取公开快照…
+        </p>
+        <button id="retry" class="text-button" hidden>重新加载快照</button>
+      </div>
+
+      <section
+        id="analysis"
+        class="analysis-section wrap section"
+        aria-labelledby="analysis-title"
+      >
+        <div class="section-heading">
+          <div>
+            <p class="section-number">01 / EXPLORE</p>
+            <h2 id="analysis-title">
+              组合是一种设计，<br class="mobile-only" />不是一个预言。
+            </h2>
+          </div>
+          <p>
+            设定参数，实际运行原版 Python 模型。<br />只使用2013年起、严格早于目标期的数据。
+          </p>
+        </div>
+        <form id="analysis-form" class="analysis-form" novalidate>
+          <div class="form-fields">
+            <div class="form-field">
+              <label for="target-issue">目标期号 <span>必填</span></label
+              ><input
+                id="target-issue"
+                name="target"
+                inputmode="numeric"
+                pattern="[0-9]{5}"
+                maxlength="5"
+                autocomplete="off"
+                placeholder="输入五位期号"
+                required
+                aria-describedby="target-help"
+              /><small id="target-help"
+                >不预设期号，不使用目标期及以后数据</small
+              >
+            </div>
+            <div class="form-field">
+              <label for="random-seed">随机种子</label
+              ><input
+                id="random-seed"
+                name="seed"
+                type="number"
+                step="1"
+                value="0"
+                required
+              /><small>相同输入可复现</small>
+            </div>
+            <div class="form-field">
+              <label for="group-count">组合数量</label
+              ><input
+                id="group-count"
+                name="groups"
+                type="number"
+                min="1"
+                max="6"
+                step="1"
+                value="5"
+                required
+              /><small>1–6 组，非购买建议</small>
+            </div>
+            <div class="form-field">
+              <label for="analysis-mode">组合策略</label
+              ><select id="analysis-mode" name="mode">
+                <option value="coverage">分散覆盖</option>
+                <option value="uniform">均匀抽样</option></select
+              ><small>覆盖不等于预测优势</small>
+            </div>
+            <div class="run-actions">
+              <button id="generate" class="button primary" type="submit">
+                生成组合 <span aria-hidden="true">→</span></button
+              ><button id="cancel-run" class="text-button" type="button" hidden>
+                取消计算
+              </button>
+            </div>
+          </div>
+          <div class="data-controls">
+            <div>
+              <b id="active-data">使用公共历史</b
+              ><span id="data-detail">2013年起 · 读取数据范围中</span>
+            </div>
+            <div class="csv-control">
+              <label for="csv-file" class="text-button">选择本地 CSV</label
+              ><input
+                id="csv-file"
+                type="file"
+                accept=".csv,text/csv"
+                class="visually-hidden"
+              /><button
+                id="use-public-data"
+                class="text-button"
+                type="button"
+                hidden
+              >
+                改用公共历史
+              </button>
+            </div>
+          </div>
+          <p class="runtime-note">
+            首次计算需下载 Python / WebAssembly
+            运行环境，可能需要数十秒；参数与本地 CSV
+            不上传。公共历史是发布时的快照，不自动刷新。
+          </p>
+          <p
+            id="run-status"
+            class="run-status"
+            role="status"
+            aria-live="polite"
+          >
+            填写目标期后点击“生成组合”。下方是固定的模型演示，不是当期推荐。
+          </p>
+        </form>
+        <div id="run-warnings" class="run-warnings" hidden></div>
+        <div class="workbench">
+          <div class="workbench-top">
+            <h3 id="result-mode" class="result-mode">分散覆盖 · 演示</h3>
+            <span class="mono seed-label" id="seed-label"
+              >SEED 0 · 5 GROUPS</span
+            >
+          </div>
+          <p class="strategy-note" id="strategy-note">
+            在候选分区中选择形态更多样的组合；不使用冷热作为预测权重。
+          </p>
+          <div class="workbench-body">
+            <div class="tickets-pane">
+              <div class="ticket-columns">
+                <span>组别</span><span>LEFT · 前区 5/35</span
+                ><span>RIGHT · 后区 2/12</span>
+              </div>
+              <div id="tickets" class="tickets" aria-label="组合列表">
+                <p class="loading-placeholder">组合将在数据载入后显示</p>
+              </div>
+              <p class="ticket-hint">
+                点击一组，展开结构。修改参数后，请点击“生成组合”重新计算。
+              </p>
+            </div>
+            <aside class="inspector" aria-labelledby="inspector-title">
+              <div class="inspector-heading">
+                <h3 id="inspector-title">第 01 组结构</h3>
+                <span class="subtle-label">描述 ≠ 预测</span>
+              </div>
+              <table class="features">
+                <caption class="visually-hidden">
+                  所选组合的两区特征
+                </caption>
+                <thead>
+                  <tr>
+                    <th scope="col">指标</th>
+                    <th scope="col">Left</th>
+                    <th scope="col">Right</th>
+                  </tr>
+                </thead>
+                <tbody id="features-body"></tbody>
+              </table>
+              <p class="inspector-note">
+                小号：Left ≤ 17，Right ≤ 6。<br />连号按相邻对计；重号与历史末期同区比较。
+              </p>
+            </aside>
+          </div>
+          <div class="workbench-bottom">
+            <div class="coverage-stat">
+              <b id="left-coverage">—</b><span>/ 35 个前区覆盖</span>
+            </div>
+            <div class="coverage-stat">
+              <b id="right-coverage">—</b><span>/ 12 个后区覆盖</span>
+            </div>
+            <p>覆盖更多号码，<strong>不提高单组中奖概率。</strong></p>
+            <button id="download" class="download-button" disabled>
+              下载结果 JSON <span aria-hidden="true">↓</span>
+            </button>
+          </div>
+        </div>
+        <div class="result-caption">
+          <span id="result-origin"
+            >公共快照 · 历史末期之后的组合设计演示，不绑定目标期</span
+          ><span>预测准入：<b>CLOSED</b></span>
+        </div>
+        <p id="runtime-info" class="small-note runtime-info"></p>
+      </section>
+
+      <section
+        id="history"
+        class="history-section wrap section"
+        aria-labelledby="history-title"
+      >
+        <div class="section-heading">
+          <div>
+            <h2 id="history-title">观察过去，不替未来下结论。</h2>
+            <p id="heat-description">最近 100 期的出现频数，相对于均匀基准。</p>
+          </div>
+          <div class="segmented light" role="group" aria-label="历史统计区域">
+            <button data-zone="left" aria-pressed="true">Left 前区</button
+            ><button data-zone="right" aria-pressed="false">Right 后区</button>
+          </div>
+        </div>
+        <div class="history-grid">
+          <div class="heat-panel">
+            <div class="panel-header">
+              <h3>号码冷热图</h3>
+              <span class="heat-legend"
+                ><i class="hot"></i>热 <i class="warm"></i>温
+                <i class="cold"></i>冷</span
+              >
+            </div>
+            <div id="heatmap" class="heatmap" aria-label="号码冷热"></div>
+            <p id="heat-detail" class="heat-detail" aria-live="polite">
+              点击号码查看出现次数与遗漏。
+            </p>
+            <p class="small-note">
+              热：z ≥ 1；冷：z ≤
+              −1；其余为温。只是频数标签，不是显著性检验，也不代表下一期更容易出现。
+            </p>
+          </div>
+          <div class="distribution-panel">
+            <div class="panel-header">
+              <h3>历史形态分布</h3>
+              <label class="visually-hidden" for="distribution"
+                >选择历史特征</label
+              ><select id="distribution">
+                <option value="odd">奇数个数</option>
+                <option value="small">小号个数</option>
+                <option value="adjacent_pairs">相邻连号对数</option>
+                <option value="repeat_previous">上期重号个数</option>
+              </select>
+            </div>
+            <div id="distribution-bars" class="distribution-bars"></div>
+            <p id="distribution-caption" class="small-note">
+              按全部有效历史统计；不是某组号码的中奖概率。
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="method" class="method-section section">
+        <div class="wrap method-layout">
+          <div class="method-intro">
+            <p class="section-number">02 / METHODOLOGY</p>
+            <h2>可靠的，<br />是过程。</h2>
+            <p>我们把可验证的计算，<br />与尚未证实的预测严格分开。</p>
+            <a
+              class="inline-link"
+              href="https://github.com/laozaidad/superlotto-analysis/blob/main/skills/superlotto/references/methodology.md"
+              target="_blank"
+              rel="noopener noreferrer"
+              >阅读完整方法 <span aria-hidden="true">↗</span></a
+            >
+          </div>
+          <div class="method-list">
+            <article>
+              <span>01</span>
+              <div>
+                <h3>先划清数据边界</h3>
+                <p>
+                  只纳入 2013
+                  年起、严格早于目标期的数据。校验期号、日期和号码，保留原始文件，记录来源与哈希。
+                </p>
+              </div>
+            </article>
+            <article>
+              <span>02</span>
+              <div>
+                <h3>描述历史，不制造“必出”</h3>
+                <p>
+                  奇偶、大小、和值、跨度、连号、重号与冷热，用来理解结构。独立随机事件不记得过去；大数定律不让冷号“补齐”。
+                </p>
+              </div>
+            </article>
+            <article>
+              <span>03</span>
+              <div>
+                <h3>设计覆盖，不包装概率</h3>
+                <p>
+                  覆盖策略减少组间重叠，扩展形态差异。不强行禁止连号，不把和值范围当中奖门槛。均值回归也不是开奖的反向补偿。
+                </p>
+              </div>
+            </article>
+            <article>
+              <span>04</span>
+              <div>
+                <h3>预测优势，留待证据</h3>
+                <p>
+                  未经独立前向验证、功效分析与多重检验校正，不开放预测权重。当前预测准入关闭，不承诺中奖或收益。
+                </p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="use" class="wrap section use-section">
+        <div class="section-heading">
+          <div>
+            <h2>带上自己的数据，<br />复现每一步。</h2>
+            <p>
+              网页直接运行原版模型；也可以在命令行离线使用，并把结果导入此处。
+            </p>
+          </div>
+          <span class="runtime-label mono"
+            >PYTHON 3.10+<br />STANDARD LIBRARY ONLY</span
+          >
+        </div>
+        <div class="use-grid">
+          <div class="terminal">
+            <div class="terminal-header">
+              <span>在仓库根目录运行</span
+              ><button id="copy-command">复制命令</button>
+            </div>
+            <pre id="command">
+python3 skills/superlotto/scripts/run_skill.py \
+  --data data/numbers.csv \
+  --target "${TARGET:?请先设置五位目标期号}" \
+  --seed 0 --groups 5 \
+  --output outputs/result.json</pre>
+            <p>
+              优先读取本地 CSV；文件缺失时，原版 Skill 从
+              500网获取。已有文件不会被自动刷新。
+            </p>
+          </div>
+          <div class="import-panel">
+            <span class="import-glyph" aria-hidden="true">{ }</span>
+            <h3>把结果放回网页</h3>
+            <p>
+              导入本地 Skill 输出的
+              JSON，查看组合与冷热。文件仅在浏览器内读取，不会上传；来源真实性需自行核验。
+            </p>
+            <label for="import-file" class="button secondary"
+              >选择 JSON 文件</label
+            ><input
+              id="import-file"
+              type="file"
+              accept=".json,application/json"
+              class="visually-hidden"
+            /><button id="reset" class="text-button" hidden>
+              返回公共快照
+            </button>
+            <p id="import-status" role="status" aria-live="polite"></p>
+          </div>
+        </div>
+      </section>
+      <section class="wrap data-footnote">
+        <details>
+          <summary>数据来源与展示边界</summary>
+          <div>
+            <p id="provenance">快照加载后显示来源信息。</p>
+            <p>
+              默认公共快照来自
+              <a
+                href="https://datachart.500.com/dlt/"
+                target="_blank"
+                rel="noopener noreferrer"
+                >500网大乐透历史数据</a
+              >；自定义快照若缺少来源记录，会明确标记来源未核验。这不是官方完整性核验，页面不声称已收录所有开奖，不自动抓取或定时刷新。更新数据需维护者重新生成并发布快照。
+            </p>
+            <p>
+              网站公开独立从500网获取的2013年起历史
+              CSV、统计汇总与模型源码，支持浏览器直接计算；不发布用户选择的本地文件。本页无登录、追踪脚本或文件上传接口。首次计算从
+              jsDelivr 加载固定版本 Pyodide
+              运行环境，CDN会收到正常资源请求，不接收目标期、种子或 CSV 内容。
+            </p>
+            <p class="hash-line">
+              源数据 SHA-256：<code id="source-hash">—</code>
+            </p>
+          </div>
+        </details>
+      </section>
+    </main>
+    <footer class="wrap footer">
+      <div>
+        <b>大乐透选号分析</b>
+        <p>看懂数据，尊重随机。</p>
+      </div>
+      <p>
+        仅供数据研究与组合设计，不构成购彩建议。<br />理性看待概率，不以选号结果作收益承诺。
+      </p>
+      <span class="mono">OPEN SOURCE<br />EST. 2026</span>
+    </footer>
+    <div id="toast" role="status" aria-live="polite"></div>
+    <noscript
+      ><p class="notice wrap">
+        请开启 JavaScript 查看数据可视化；模型说明与 GitHub 源码链接仍可使用。
+      </p></noscript
+    >
+  </body>
+</html>
