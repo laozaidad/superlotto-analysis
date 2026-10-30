@@ -1,0 +1,4 @@
+interface:
+  display_name: "大乐透选号分析"
+  short_description: "分析大乐透历史数据、七类号码特征与组合覆盖，缺少数据时获取500网历史记录"
+  default_prompt: "使用 $superlotto 为指定期号运行大乐透选号分析，检查数据来源与完整性，生成可复现组合并说明概率局限。"
