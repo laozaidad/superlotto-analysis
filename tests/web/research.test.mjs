@@ -278,7 +278,7 @@ with tempfile.TemporaryDirectory() as directory:
     history,_=model.select_history(records,'26999')
     assert output['data_quality']==data_quality(history,'26999')
     assert all(warning in output['warnings'] for warning in output['audit']['warnings'])
-    assert any('数据截止26123' in warning and '26999' in warning for warning in output['warnings'])
+    assert any(f"数据截止{history[-1]['id']}" in warning and '26999' in warning for warning in output['warnings'])
     assert any('200期' in warning for warning in output['warnings'])
     assert 'source_path' not in output['audit']
     assert output['runtime']['data_origin']=='local'

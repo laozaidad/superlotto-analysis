@@ -243,7 +243,7 @@ async function loadSnapshot() {
   try {
     const response = await fetch(
       new URL("../data/snapshot.json", import.meta.url),
-      { signal: AbortSignal.timeout(15000) },
+      { cache: "no-cache", signal: AbortSignal.timeout(15000) },
     );
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     snapshot = validateSnapshot(await response.json());

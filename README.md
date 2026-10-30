@@ -30,7 +30,7 @@
 - **公共历史不是实时数据。** `site/runtime/history.csv` 是为网页独立从500网获取的2023年以来公开历史，不是用户的私人 CSV。页面标明实际截止范围；500网是第三方数据源，抓取成功不等于官方认证或全历史无缺漏。
 - **原模型与数据可核对。** `site/runtime/` 中的 `model.py`、`research.py`、`conditional_core.py` 与 Skill 脚本逐字节一致；`manifest.json` 记录三个模块和网页历史 CSV 的 SHA-256。worker 在计算前校验这些文件，失败则停止。哈希验证的是文件一致性，不是开奖来源真实性。
 - **本地 CSV、JSON 不上传。** 应用仅在当前浏览器中读取所选文件和计算；不会把文件内容发送给 GitHub、jsDelivr 或500网。页面与公共数据仍从 GitHub Pages 下载，Python 运行时从 jsDelivr 下载，因此首次使用不是完全离线，也会向这些服务发起普通资源请求。
-- **不直接抓500网，不自动更新。** 网页使用已发布的公共 CSV，或用户明确选择的本地 CSV；不会跨域抓取500网、自动刷新已发布历史或定时获取数据。需要更近期数据时导入自己的合规 CSV，或由维护者显式更新公开版本。
+- **后台定时检查，浏览器不实时刷新。** GitHub Actions 每天北京时间（UTC+8）07:30、22:30 检查500网公开历史；有新增且校验通过后才更新并发布。浏览器不会跨域抓500网，也不会自动重算已显示结果。更新发布后请刷新网页，再点击生成；本地 CSV 不受后台任务影响。
 - **仅发布 `site/`。** 发布内容包括网页、展示快照、独立公共历史、原版模型和清单；用户工作目录、私人 CSV、个人路径与验证日志不随网页发布。生成结果仍是组合设计，不是已经证实的开奖预测。
 
 ### 本地预览
@@ -43,7 +43,34 @@ python3 -m http.server 8000 --bind 127.0.0.1 --directory site
 
 ### 更新公共数据与运行资源
 
-更新是显式维护操作，发布 workflow 不联网抓取开奖数据。先独立获取公开数据到新目录，再从**同一份来源**同时导出展示快照和浏览器运行资源。`--runtime-dir` 会生成可公开下载的历史 CSV，必须使用明确可公开的独立数据，不能用用户私人 CSV；也不要把带个人路径的原始运行报告直接提交到 `site/`。
+`Deploy analysis website` 在每天北京时间（与新加坡同为 UTC+8）**07:30、22:30**，以及推送到 `main` 或手动运行时检查公开历史。cron 使用 UTC 的 `30 14,23 * * *`。流程如下：
+
+1. 从500网独立抓取23001起的公开数据到临时目录，不读取用户私人 CSV。
+2. 校验来源侧车与哈希、号码和日期、期号连续性；候选必须保留全部已发布记录，拒绝修改旧开奖、丢失记录、缺期或未来日期。
+3. 无新增时保持公开文件与时间戳不变，不创建空提交；有新增时从同一份来源重建快照、公共 CSV、模型副本及哈希清单，通过检查后仅提交受控公共产物，并在同次 workflow 部署。固定研究回测证据不会随数据更新被重写。
+
+每次成功的定时检查都会验证并部署当前保存的版本，即使没有新增数据也会尝试部署，以恢复前次可能发生的部署失败；这不会改写数据或制造空提交。
+
+抓取或校验失败时不提交新数据，保留旧公共历史；若数据已成功推送但部署失败，仓库可能已有新数据，线上仍是旧版。以页面显示的实际截止期和 Actions 部署结果为准，不把任务启动视为更新成功。
+
+查看或重试：[Actions → Deploy analysis website](https://github.com/laozaidad/superlotto-analysis/actions/workflows/pages.yml) → **Run workflow**，选择 `main`。`refresh_history` 默认启用；源站故障期间需要仅发布代码修复时，可取消勾选，沿用已保存的公共历史。
+
+GitHub 的定时任务可能延迟或被丢弃；公开仓库连续60天无活动会自动停用定时 workflow，需在 Actions 中重新启用。因此这不是实时数据服务，也不承诺准点或永不中断。见 [GitHub schedule 官方说明](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule)。
+
+在完整仓库中手动执行同样的更新校验：
+
+```bash
+python3 scripts/update_history.py --site-dir site
+```
+
+也可显式提供独立取得的公共 CSV，必须同时保留与其哈希匹配的原始500网来源侧车：
+
+```bash
+python3 scripts/update_history.py --site-dir site \
+  --source-csv "${PUBLIC_CSV:?请设置独立公开CSV路径}"
+```
+
+本地命令只更新工作目录的受控公共文件，不自动提交或发布。不要将私人 CSV、带个人路径的原始运行报告放进 `site/`。只更新模型运行资源时，仍可从明确可公开的同一来源显式构建：
 
 ```bash
 PUBLIC_DATA_DIR=$(mktemp -d)
@@ -61,7 +88,7 @@ python3 scripts/build_site_data.py \
 
 ### 发布方式
 
-仓库的 **Settings → Pages → Build and deployment → Source** 选择 **GitHub Actions**。推送到 `main` 后，`Deploy analysis website` workflow 会先执行 Python 与网页检查，验证运行模型与仓库模型相同、清单哈希匹配，再仅打包 `site/` 并部署到 `github-pages` 环境；也可从 Actions 手动运行。PR 不触发网站部署，手动选择其他分支也不会发布。
+仓库的 **Settings → Pages → Build and deployment → Source** 选择 **GitHub Actions**。`Deploy analysis website` workflow 按上面的开关检查公开历史，执行 Python 与网页检查，验证运行模型与仓库模型相同、清单哈希匹配，再仅打包 `site/` 并部署到 `github-pages` 环境。自动数据提交与部署在同次流程完成，不依赖机器人推送再次触发 workflow；PR 不触发网站部署，手动选择其他分支也不会发布。
 
 配置遵循 [GitHub Pages 自定义 workflow 文档](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages)。网站是否已发布，以 Actions 部署成功和实际网址可访问为准。
 
@@ -157,7 +184,7 @@ No.,L1,L2,L3,L4,L5,R1,R2,Date
 | 普通模式不足100期或数据陈旧 | 使用真实样本并明确报告局限，不补造期次 |
 | 条件融合研究不足200条有效此前历史 | 明确拒绝，不借用早年数据或自动换算法 |
 
-500网是第三方数据源，不是官方核验。抓取成功也不代表全历史完整；需查看记录数、实际首末期、目标附近覆盖及元数据警告。现有数据不会因运行选号而自动刷新；需要更新时显式抓取到新路径，核对后使用。独立抓取参数见 `python3 skills/superlotto/scripts/fetch_data.py --help`。
+500网是第三方数据源，不是官方核验。抓取成功也不代表全历史完整；需查看记录数、实际首末期、目标附近覆盖及元数据警告。CLI 已有数据不会因运行选号而自动刷新；需要更新本地数据时显式抓取到新路径，核对后使用。网页公共历史由上述后台任务独立维护，不会更新本地文件。独立抓取参数见 `python3 skills/superlotto/scripts/fetch_data.py --help`。
 
 独立抓取脚本的 `--overwrite` 仅用于用户明确要求覆盖数据的操作；不会由选号入口自动启用。解析或数据校验失败时入口退出码为2，不生成假结果。
 

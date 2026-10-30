@@ -53,7 +53,15 @@ No.,L1,L2,L3,L4,L5,R1,R2,Date
 2. 告知失败环节，让用户提供合规CSV，或在浏览器保存500网历史记录页HTML。
 3. 对用户提供的HTML离线解析时，仍记录文件哈希和来源性质；不得凭HTML文件名断言其真实性或完整性。
 
-已有数据不自动刷新；实际刷新命令以 `scripts/fetch_data.py --help` 为准。需要覆盖现有文件时必须显式选择覆盖选项，不能把自动缺失补全当作任意覆盖授权。
+CLI 已有本地数据不自动刷新；实际刷新命令以 `scripts/fetch_data.py --help` 为准。需要覆盖现有文件时必须显式选择覆盖选项，不能把自动缺失补全当作任意覆盖授权。
+
+## 网页公共历史定时维护
+
+这属于完整仓库的维护流程，不是安装后每次运行 Skill 的隐含动作。GitHub Actions 每天北京时间／新加坡时间07:30、22:30检查独立公开数据；推送 `main` 和手动运行也会检查。仅纳入2023年起的数据；新候选必须保留已发布历史，拒绝删改旧开奖、缺期、非法号码和未来日期。无新增不写入、不创建空提交；只有新增且校验通过才提交公共产物。每次成功检查均验证并部署当前保存的版本，以恢复前次可能的部署失败。固定回测证据保持原样，不把新增数据回填成旧预测。
+
+维护者可在完整仓库使用 `python3 scripts/update_history.py --site-dir site`。浏览器只读取已发布快照，不跨域抓500网、不自动刷新当前页面或重算旧结果；使用新数据需刷新网页再生成。此流程不读取或改写用户私人 CSV。
+
+到 [Actions → Deploy analysis website](https://github.com/laozaidad/superlotto-analysis/actions/workflows/pages.yml) 检查实际结果或手动重试；手动取消 `refresh_history` 可用保留的数据发布代码修复。抓取、校验失败不提交；若推送成功而部署失败，仓库与线上截止期可能不同。定时任务可能延迟、被丢弃，公开仓库60天无活动时会停用，详见 [GitHub schedule 文档](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule)。不承诺实时或官方完整性。
 
 ## 复现与发布
 

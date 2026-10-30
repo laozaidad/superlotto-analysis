@@ -35,7 +35,7 @@ async function sha256(bytes) {
 async function readAsset(filename, limit) {
   const response = await fetch(
     new URL(`../runtime/${filename}`, import.meta.url),
-    { credentials: "omit", signal: AbortSignal.timeout(30000) },
+    { cache: "no-cache", credentials: "omit", signal: AbortSignal.timeout(30000) },
   );
   if (!response.ok)
     throw new Error(`无法读取${filename}（HTTP ${response.status}）`);
@@ -125,7 +125,7 @@ def _browser_analyze():
     if context['data_origin'] == 'local':
         warnings.append('使用用户在浏览器本地选择的CSV；来源真实性未核验，文件未上传。')
     else:
-        warnings.append('使用网站发布时的公共历史快照，不会自动获取最新开奖。')
+        warnings.append('使用已发布的公共历史快照；后台定时检查不等于实时更新，获取新版本需刷新网页并重新生成。')
     result['quality_warnings'] = warnings
     result['data_quality'] = {'training_count': len(history), 'training_last_id': last_id,
         'target_predecessor_present': predecessor_present, 'history_gaps': gaps,
@@ -193,7 +193,7 @@ def _browser_research():
         *result['warnings'], *audit['warnings'], *quality_warnings,
         '第三方数据未逐条官方核验；来源哈希不证明真实性或完整性。',
         '研究仅在至少200期有效历史（100期特征预热 + 100行学习样本）时运行；不足时停止，不回退到其他模式。',
-        '本地CSV未上传，来源未核验。' if context['data_origin'] == 'local' else '使用发布时的公共历史，不自动更新，不保证最新完整。',
+        '本地CSV未上传，来源未核验。' if context['data_origin'] == 'local' else '使用已发布公共历史；后台定时检查不保证最新完整，更新后需刷新网页再运行实验。',
     ]))
     return json.dumps(result, ensure_ascii=False, allow_nan=False)
 

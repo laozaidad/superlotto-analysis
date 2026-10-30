@@ -200,7 +200,14 @@
           <p class="runtime-note">
             首次计算需下载 Python / WebAssembly
             运行环境，可能需要数十秒；参数与本地 CSV
-            不上传。公共历史是发布时的快照，不自动刷新。
+            不上传。公共历史由后台每天07:30、22:30（北京时间）检查；
+            有新增才更新，可能延迟。刷新网页后重新生成即可使用已发布数据。
+            <a
+              href="https://github.com/laozaidad/superlotto-analysis/actions/workflows/pages.yml"
+              target="_blank"
+              rel="noopener noreferrer"
+              >查看更新任务 ↗</a
+            >
           </p>
           <p
             id="run-status"
@@ -427,6 +434,7 @@
           </div>
           <p class="runtime-note">
             固定配置：岭参数10、温度0.5、条件权重＋软去冗余。没有随机挑种子。首次需下载Pyodide，样本生成和拟合可能较慢；数据不上传。
+            公共历史每天07:30、22:30（北京时间）由后台检查，非实时；更新后需刷新网页再运行实验。
           </p>
           <p
             id="research-status"

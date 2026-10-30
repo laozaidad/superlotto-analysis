@@ -4,6 +4,14 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      refresh_history:
+        description: '检查500网新增历史；取消勾选可仅部署已保留的数据'
+        type: boolean
+        default: true
+  schedule:
+    # UTC 14:30 / 23:30 = 北京时间、Asia/Singapore 22:30 / 次日07:30。
+    - cron: '30 14,23 * * *'
 
 permissions:
   contents: read
@@ -16,11 +24,17 @@ jobs:
   validate-and-package:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     permissions:
-      contents: read
+      contents: write
       pages: read
+    outputs:
+      site_commit: ${{ steps.release.outputs.site_commit }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          # 等待并发锁后取最新main，避免排队的旧事件覆盖新发布。
+          ref: main
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -32,6 +46,35 @@ jobs:
         run: |
           python -m pip install -r requirements-dev.txt
           npm ci
+      - name: Check and stage public history additions
+        id: refresh
+        if: github.event_name != 'workflow_dispatch' || inputs.refresh_history
+        shell: bash
+        run: |
+          python3 scripts/update_history.py --site-dir site | tee "$RUNNER_TEMP/history-refresh.json"
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          result = json.loads((Path(os.environ['RUNNER_TEMP']) / 'history-refresh.json').read_text())
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as handle:
+              handle.write(f"status={result['status']}\n")
+          PY
+      - name: Record history refresh outcome
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo '### Public history check'
+            if [ -s "$RUNNER_TEMP/history-refresh.json" ]; then
+              echo '```json'
+              cat "$RUNNER_TEMP/history-refresh.json"
+              echo '```'
+            else
+              echo 'No successful refresh report: check was skipped or failed. No data commit was made.'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
       - name: Validate Python model and exporter
         run: |
           ruff check .
@@ -67,6 +110,33 @@ jobs:
           assert hashlib.sha256(history).hexdigest() == manifest['data_sha256'], 'History hash mismatch'
           print('Browser runtime matches canonical model and manifest hashes')
           PY
+      - name: Commit only validated public data
+        shell: bash
+        run: |
+          # 并发锁不阻止人工push：若main已经前进则停止，绝不force/rebase旧产物。
+          remote_head=$(git ls-remote origin refs/heads/main | cut -f1)
+          test "$remote_head" = "$(git rev-parse HEAD)" || { echo 'main changed during validation; rerun this workflow.' >&2; exit 1; }
+          git add -- site/data/snapshot.json site/runtime/history.csv site/runtime/manifest.json \
+            site/runtime/model.py site/runtime/research.py site/runtime/conditional_core.py
+          if ! git diff --cached --quiet; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git commit -m '自动更新2023年以来的公共历史数据'
+            git push origin HEAD:main
+          fi
+      - name: Record actual artifact revision
+        id: release
+        shell: bash
+        run: |
+          # 无新增也发布已验证产物，修复上一轮数据已提交但部署失败的情况。
+          site_commit=$(git rev-parse HEAD)
+          echo "site_commit=$site_commit" >> "$GITHUB_OUTPUT"
+          {
+            echo '### Actual website artifact'
+            echo "Source commit: $site_commit"
+            sha256sum site/runtime/manifest.json site/runtime/history.csv
+            echo 'Pages event metadata may refer to the triggering commit; the source commit above includes any data update.'
+          } >> "$GITHUB_STEP_SUMMARY"
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload only public website files
@@ -77,6 +147,7 @@ jobs:
   deploy:
     needs: validate-and-package
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
       pages: write
       id-token: write
@@ -84,6 +155,14 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      - name: Reject obsolete artifacts before deployment
+        env:
+          EXPECTED_COMMIT: ${{ needs.validate-and-package.outputs.site_commit }}
+          REPOSITORY_URL: https://github.com/${{ github.repository }}.git
+        shell: bash
+        run: |
+          remote_head=$(git ls-remote "$REPOSITORY_URL" refs/heads/main | cut -f1)
+          test "$remote_head" = "$EXPECTED_COMMIT" || { echo 'main advanced; refusing to deploy an obsolete artifact.' >&2; exit 1; }
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
