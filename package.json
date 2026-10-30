@@ -8,6 +8,7 @@
   },
   "devDependencies": {
     "eslint": "10.13.0",
+    "happy-dom": "21.0.4",
     "typescript": "5.9.3"
   }
 }

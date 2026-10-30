@@ -11,6 +11,7 @@
     <meta name="theme-color" content="#153e35" />
     <title>大乐透选号分析 · 看懂数据，尊重随机</title>
     <link rel="stylesheet" href="assets/style.css" />
+    <link rel="stylesheet" href="assets/controls.css" />
     <script type="module" src="assets/app.js"></script>
   </head>
   <body>
@@ -145,10 +146,25 @@
             </div>
             <div class="form-field">
               <label for="analysis-mode">组合策略</label
-              ><select id="analysis-mode" name="mode">
-                <option value="coverage">分散覆盖</option>
-                <option value="uniform">均匀抽样</option></select
-              ><small>覆盖不等于预测优势</small>
+              ><select
+                id="analysis-mode"
+                name="mode"
+                data-custom-select
+                aria-describedby="strategy-help"
+              >
+                <option
+                  value="coverage"
+                  data-description="减少组间重叠，拓展形态覆盖"
+                >
+                  分散覆盖
+                </option>
+                <option
+                  value="uniform"
+                  data-description="不按形态评分，作为随机对照"
+                >
+                  均匀抽样
+                </option></select
+              ><small id="strategy-help">覆盖不等于预测优势</small>
             </div>
             <div class="run-actions">
               <button id="generate" class="button primary" type="submit">
@@ -300,7 +316,11 @@
               <h3>历史形态分布</h3>
               <label class="visually-hidden" for="distribution"
                 >选择历史特征</label
-              ><select id="distribution">
+              ><select
+                id="distribution"
+                data-custom-select
+                data-select-size="compact"
+              >
                 <option value="odd">奇数个数</option>
                 <option value="small">小号个数</option>
                 <option value="adjacent_pairs">相邻连号对数</option>

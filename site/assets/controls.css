@@ -1,0 +1,355 @@
+/* 参数控件统一层：原生 select 作为数据源，自定义浮层不影响模型。 */
+:root {
+  --control-focus: #3e775a;
+  --control-hover: #f0f5ed;
+  --control-selected: #e6efdf;
+  --control-shadow:
+    0 12px 32px rgb(21 62 53 / 12%), 0 2px 6px rgb(21 62 53 / 5%);
+}
+button:focus-visible,
+a:focus-visible,
+summary:focus-visible,
+select:focus-visible,
+input:focus-visible,
+.csv-control:has(input:focus-visible) label,
+.import-panel:has(#import-file:focus-visible) label[for="import-file"] {
+  outline-color: var(--control-focus);
+}
+.analysis-form {
+  padding: 28px;
+  border-radius: 14px;
+  box-shadow: 0 4px 18px rgb(21 62 53 / 3%);
+}
+.form-fields {
+  grid-template-columns: 1.3fr 0.75fr 0.75fr 1.1fr auto;
+  gap: 20px;
+}
+.form-field label {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 9px;
+}
+.form-field label span {
+  font-size: 10px;
+  padding: 2px 5px;
+  border-radius: 4px;
+  background: var(--paper);
+}
+.form-field input,
+.form-field select,
+.select-trigger {
+  min-width: 0;
+  height: 50px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 14px;
+  transition:
+    border-color 150ms ease,
+    background-color 150ms ease,
+    box-shadow 150ms ease;
+}
+.form-field input {
+  padding: 12px 14px;
+}
+.form-field input::placeholder {
+  font-size: 13px;
+}
+.form-field input:hover,
+.select-trigger:hover:not(:disabled) {
+  border-color: #a2b9a4;
+}
+.form-field input:focus,
+.select-trigger[aria-expanded="true"] {
+  border-color: var(--control-focus);
+  background: var(--surface);
+  box-shadow: 0 0 0 3px rgb(62 119 90 / 9%);
+}
+.form-field input:focus-visible,
+.select-trigger:focus-visible {
+  outline-offset: 3px;
+  outline-width: 2px;
+}
+.form-field small {
+  font-size: 11px;
+  line-height: 1.65;
+  margin-top: 8px;
+}
+.run-actions {
+  padding-top: 30px;
+}
+.run-actions .button {
+  height: 50px;
+  border-radius: 9px;
+  padding: 12px 22px;
+  font-size: 14px;
+  gap: 20px;
+}
+.run-actions .text-button {
+  font-size: 12px;
+}
+.data-controls {
+  border: 0;
+  border-radius: 9px;
+  background: var(--paper);
+  padding: 14px 16px;
+  margin-top: 24px;
+}
+.data-controls b {
+  font-size: 12px;
+  font-weight: 600;
+}
+.data-controls span {
+  font-size: 11px;
+}
+.csv-control {
+  flex-shrink: 0;
+}
+.csv-control .text-button {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--surface);
+  padding: 6px 11px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+.csv-control .text-button:hover {
+  border-color: var(--control-focus);
+}
+.runtime-note {
+  font-size: 11px;
+  margin-top: 12px;
+}
+.run-status {
+  font-size: 12px;
+  min-height: 22px;
+}
+.select-field {
+  position: relative;
+  min-width: 0;
+}
+.select-field.is-open {
+  z-index: 20;
+}
+.select-field > select[hidden] {
+  display: none;
+}
+.select-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 0 14px;
+  text-align: left;
+  touch-action: manipulation;
+}
+.select-trigger:active {
+  transform: none;
+}
+.select-value {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.select-chevron {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 7px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: translateY(-2px) rotate(45deg);
+  color: var(--muted);
+  transition: transform 160ms ease;
+}
+.is-open .select-chevron {
+  transform: translateY(2px) rotate(225deg);
+}
+.select-popup {
+  position: absolute;
+  z-index: 30;
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: 6px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  box-shadow: var(--control-shadow);
+  scrollbar-width: thin;
+  animation: select-reveal 130ms ease-out;
+}
+.select-popup[hidden] {
+  display: none;
+}
+.select-option {
+  position: relative;
+  display: grid;
+  align-content: center;
+  min-height: 44px;
+  padding: 10px 34px 10px 12px;
+  border-radius: 7px;
+  cursor: pointer;
+  line-height: 1.5;
+  color: var(--ink);
+  user-select: none;
+  touch-action: manipulation;
+}
+.select-option[hidden] {
+  display: none;
+}
+.select-option:has(.select-option-description:not([hidden])) {
+  min-height: 66px;
+}
+.select-option + .select-option {
+  margin-top: 3px;
+}
+.select-option:hover {
+  background: var(--control-hover);
+}
+.select-option.is-active {
+  outline: 1px solid var(--control-focus);
+  outline-offset: -1px;
+}
+.select-option[aria-selected="true"] {
+  background: var(--control-selected);
+}
+.select-option-title {
+  font-size: 14px;
+  font-weight: 550;
+}
+.select-option-description {
+  font-size: 11px;
+  margin-top: 4px;
+  color: var(--muted);
+}
+.select-check {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--green);
+  font-size: 15px;
+  font-weight: 600;
+  opacity: 0;
+}
+.select-option[aria-selected="true"] .select-check {
+  opacity: 1;
+}
+.select-option[aria-disabled="true"] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.is-disabled .select-trigger {
+  cursor: not-allowed;
+}
+.select-field[data-select-size="compact"] {
+  flex-shrink: 0;
+}
+.select-field[data-select-size="compact"] .select-trigger {
+  height: 42px;
+  font-size: 12px;
+  background: var(--surface);
+  gap: 16px;
+}
+@keyframes select-reveal {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@media (max-width: 1100px) {
+  .form-fields {
+    grid-template-columns: 1.3fr 0.75fr 0.75fr 1.1fr;
+    gap: 16px;
+  }
+  .run-actions {
+    padding-top: 0;
+  }
+}
+@media (max-width: 600px) {
+  .analysis-form {
+    padding: 20px 16px;
+  }
+  .form-fields {
+    grid-template-columns: 1fr 1fr;
+    gap: 20px 14px;
+  }
+  .form-field:first-child,
+  .form-field:has(#analysis-mode) {
+    grid-column: 1 / -1;
+  }
+  .form-field label {
+    font-size: 13px;
+  }
+  .form-field input,
+  .form-field select,
+  .select-trigger {
+    font-size: 16px;
+  }
+  .form-field small {
+    font-size: 11px;
+  }
+  .run-actions .button {
+    height: 50px;
+  }
+  .data-controls {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 14px;
+    gap: 12px;
+  }
+  .data-controls span {
+    font-size: 11px;
+  }
+  .csv-control {
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+  }
+  .csv-control .text-button {
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+  .runtime-note {
+    font-size: 11px;
+  }
+  .run-status {
+    font-size: 12px;
+  }
+  .ticket-columns {
+    font-size: 9px;
+  }
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --control-focus: #b1cd98;
+    --control-hover: #283e32;
+    --control-selected: #324c3b;
+    --control-shadow: 0 12px 32px rgb(0 0 0 / 35%), 0 2px 6px rgb(0 0 0 / 20%);
+  }
+  .form-field input:hover,
+  .select-trigger:hover:not(:disabled) {
+    border-color: #738a70;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .select-trigger,
+  .select-chevron,
+  .form-field input {
+    transition: none;
+  }
+  .select-popup {
+    animation: none;
+  }
+}
+@media (forced-colors: active) {
+  .select-option[aria-selected="true"] {
+    border: 1px solid Highlight;
+  }
+  .select-popup {
+    border: 1px solid CanvasText;
+  }
+}

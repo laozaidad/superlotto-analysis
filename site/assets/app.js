@@ -7,6 +7,9 @@ import {
   decodeCsv,
 } from "./data.js";
 import { runAnalysis, cancelAnalysis } from "./engine.js";
+import { initCustomSelects } from "./select.js";
+
+initCustomSelects();
 /** @typedef {import('./data.js').Snapshot} Snapshot */
 /** @typedef {import('./data.js').Portfolio} Portfolio */
 /** @typedef {import('./data.js').HeatEntry} HeatEntry */
