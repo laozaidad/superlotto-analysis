@@ -24,6 +24,8 @@ HISTORY_URL = "https://datachart.500.com/dlt/history/history.shtml"
 DATA_URL = "https://datachart.500.com/dlt/history/newinc/history.php"
 HEADERS = ["No.", "L1", "L2", "L3", "L4", "L5", "R1", "R2", "Date"]
 MAX_RESPONSE_BYTES = 20 * 1024 * 1024
+HISTORY_START_DATE = "2013-01-01"
+HISTORY_START_ISSUE = "13001"
 
 
 class FetchError(ValueError):
@@ -210,7 +212,7 @@ def _atomic_write(path: Path, payload: bytes, overwrite: bool) -> None:
             temporary.unlink(missing_ok=True)
 
 
-def fetch_data(output: str | Path, target: str | None = None, start: str = "07001",
+def fetch_data(output: str | Path, target: str | None = None, start: str = HISTORY_START_ISSUE,
                end: str | None = None, html_path: str | Path | None = None,
                overwrite: bool = False) -> dict[str, Any]:
     """取得全部可用范围；metadata明确说明无法独立证明跨年完整性。"""
@@ -219,6 +221,8 @@ def fetch_data(output: str | Path, target: str | None = None, start: str = "0700
     if not overwrite and (output.exists() or metadata_path.exists()):
         raise FetchError("输出CSV或来源metadata已存在；默认不覆盖，可显式使用--overwrite")
     start = validate_issue(start, "起始期号")
+    if int(start) < int(HISTORY_START_ISSUE):
+        raise FetchError("只考虑2013-01-01以来的数据，起始期号不得早于13001")
     if target is not None:
         target = validate_issue(str(target), "目标期号")
     if end is not None:
@@ -252,6 +256,7 @@ def fetch_data(output: str | Path, target: str | None = None, start: str = "0700
     html, encoding = decode_html(raw)
     parsed = parse_history_html(html)
     rows = [row for row in parsed if int(row["id"]) >= int(start)
+            and row["date"] >= HISTORY_START_DATE
             and (end is None or int(row["id"]) <= int(end))
             and (target is None or int(row["id"]) < int(target))]
     if not rows:
@@ -278,6 +283,7 @@ def fetch_data(output: str | Path, target: str | None = None, start: str = "0700
         "sha256": hashlib.sha256(payload).hexdigest(), "rows": len(rows),
         "first_id": rows[0]["id"], "last_id": rows[-1]["id"],
         "latest_observed_on_site": latest_observed, "target_exclusive": target,
+        "history_start_date": HISTORY_START_DATE, "history_start_issue": HISTORY_START_ISSUE,
         "requested_start": start, "requested_end": end, "effective_requested_end": effective_end,
         "parsed_rows": len(parsed), "filtered_rows": len(parsed)-len(rows),
         "within_year_sequence_checked": True, "complete": False,
@@ -321,6 +327,7 @@ def ensure_data(path: str | Path, target: str | None = None) -> dict[str, Any]:
         result: dict[str, Any] = {
             "source": "local", "path": str(path), "sha256": sha256,
             "downloaded": False, "target_exclusive": target, "warnings": [],
+            "history_start_date": HISTORY_START_DATE, "history_start_issue": HISTORY_START_ISSUE,
         }
         metadata_path = path.with_suffix(path.suffix + ".metadata.json")
         if metadata_path.exists():
@@ -345,7 +352,7 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--target")
-    parser.add_argument("--start", default="07001")
+    parser.add_argument("--start", default=HISTORY_START_ISSUE, help="起始期号，固定下限13001")
     parser.add_argument("--end")
     parser.add_argument("--html", type=Path)
     parser.add_argument("--overwrite", action="store_true")

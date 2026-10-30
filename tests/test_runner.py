@@ -50,7 +50,7 @@ class RunnerTests(unittest.TestCase):
             synthetic_csv(path)
             return {"source": "test double"}
         with patch.object(run_skill, "ensure_data", side_effect=acquire):
-            result = run_skill.execute(source, "26003", 26124, 5, "coverage")
+            result = run_skill.execute(source, "26003", 0, 5, "coverage")
         self.assertEqual(result["coverage"]["left_count"], 25)
 
     def test_invalid_local_file_not_replaced(self):

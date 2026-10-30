@@ -22,6 +22,7 @@ sys.modules[SPEC.name] = fetch
 SPEC.loader.exec_module(fetch)
 FIXTURE = ROOT / "tests/fixtures/500_history_sample.html"
 HTML = FIXTURE.read_text(encoding="utf-8")
+NEXT_ISSUE = f"{int(fetch.parse_history_html(HTML)[-1]['id']) + 1:05d}"
 
 
 class ParseTests(unittest.TestCase):
@@ -113,15 +114,15 @@ class SaveTests(unittest.TestCase):
     def test_existing_local_file_is_not_downloaded_or_repaired(self) -> None:
         self.output.write_bytes(b"bad local file")
         with patch.object(fetch, "read_url", side_effect=AssertionError("must not fetch")):
-            result = fetch.ensure_data(self.output, target="26124")
+            result = fetch.ensure_data(self.output, target=NEXT_ISSUE)
         self.assertEqual(result['source'], 'local')
         self.assertFalse(result['downloaded'])
         self.assertEqual(self.output.read_bytes(), b"bad local file")
 
     def test_missing_local_file_calls_fetch(self) -> None:
         with patch.object(fetch, "fetch_data", return_value={"source": "500.com"}) as download:
-            result = fetch.ensure_data(self.output, target="26124")
-        download.assert_called_once_with(self.output.resolve(), target="26124")
+            result = fetch.ensure_data(self.output, target=NEXT_ISSUE)
+        download.assert_called_once_with(self.output.resolve(), target=NEXT_ISSUE)
         self.assertTrue(result['downloaded'])
 
     def test_existing_valid_provenance_is_retained(self) -> None:
@@ -153,7 +154,7 @@ class SaveTests(unittest.TestCase):
     def test_network_range_uses_observed_latest_and_target(self) -> None:
         raw = HTML.encode('utf-8')
         with patch.object(fetch, "read_url", side_effect=[(raw, fetch.HISTORY_URL), (raw, fetch.DATA_URL)]) as request:
-            result = fetch.fetch_data(self.output, target="26124", start="26121")
+            result = fetch.fetch_data(self.output, target=NEXT_ISSUE, start="26121")
         self.assertEqual(request.call_args_list[1].args[0], fetch.DATA_URL+'?start=26121&end=26123')
         self.assertEqual(result['latest_observed_on_site'], '26123')
         self.assertEqual(result['effective_requested_end'], '26123')
@@ -182,13 +183,37 @@ class SaveTests(unittest.TestCase):
         raw = HTML.encode('utf-8')
         with patch.object(fetch, "read_url", side_effect=[(raw, fetch.HISTORY_URL), (raw, fetch.DATA_URL)]):
             with self.assertRaisesRegex(fetch.FetchError, "截断"):
-                fetch.fetch_data(self.output, target="26124")
+                fetch.fetch_data(self.output, target=NEXT_ISSUE)
         self.assertFalse(self.output.exists())
 
     def test_invalid_target_and_empty_cutoff(self) -> None:
-        for target in ('2612', 'abcde', '07001'):
+        for target in ('2612', 'abcde', '13001'):
             with self.assertRaises(fetch.FetchError):
                 fetch.fetch_data(self.output, target=target, html_path=FIXTURE)
+
+    def test_2013_floor_cannot_be_overridden(self) -> None:
+        with patch.object(fetch, "read_url") as network:
+            with self.assertRaisesRegex(fetch.FetchError, "2013"):
+                fetch.fetch_data(self.output, start="12154")
+            network.assert_not_called()
+        self.assertFalse(self.output.exists())
+
+    def test_offline_html_excludes_old_years(self) -> None:
+        def row(identity: str, day: str) -> str:
+            left = ''.join(f'<td class="cfont2">{n}</td>' for n in (1, 4, 10, 22, 30))
+            right = ''.join(f'<td class="cfont4">{n}</td>' for n in (2, 9))
+            return f'<tr><td>{identity}</td>{left}{right}<td>{day}</td></tr>'
+        page = Path(self.temp.name) / 'synthetic.html'
+        page.write_text('<table><tbody id="tdata">' + row('12154', '2012-12-31')
+                        + row('13001', '2013-01-01') + '</tbody></table>')
+        result = fetch.fetch_data(self.output, target='13002', html_path=page)
+        self.assertEqual(result['first_id'], '13001')
+        self.assertEqual(result['requested_start'], '13001')
+        self.assertEqual(result['history_start_date'], '2013-01-01')
+        self.assertEqual(result['rows'], 1)
+        self.assertEqual(result['filtered_rows'], 1)
+        with self.output.open(encoding='utf-8-sig') as handle:
+            self.assertEqual([r['No.'] for r in csv.DictReader(handle)], ['13001'])
 
 
 class NetworkTests(unittest.TestCase):

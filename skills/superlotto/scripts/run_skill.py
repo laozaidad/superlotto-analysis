@@ -72,8 +72,8 @@ def write_new_json(path: Path, payload: str) -> None:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--data", type=Path, default=Path("data/numbers.csv"))
-    parser.add_argument("--target", required=True, help="五位目标期号；只使用严格早于该期的数据")
-    parser.add_argument("--seed", type=int, default=26124)
+    parser.add_argument("--target", required=True, help="五位目标期号；只使用2013年起且严格早于该期的数据")
+    parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--groups", type=int, default=5)
     parser.add_argument("--mode", choices=("uniform", "coverage"), default=model.DEFAULT_MODE)
     parser.add_argument("--output", type=Path, help="可选JSON输出路径；不会覆盖已有文件")
