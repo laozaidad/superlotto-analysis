@@ -1,21 +1,21 @@
 {
   "schema_version": 1,
   "title": "大乐透选号分析",
-  "generated_at": "2026-11-02T22:51:17.723678+00:00",
+  "generated_at": "2026-11-04T20:53:55.850675+00:00",
   "description": "截至历史末期的统计与组合设计展示，不指定目标期，不代表预测结果或购彩建议。",
   "history": {
-    "rows": 577,
+    "rows": 578,
     "first_id": "23001",
-    "last_id": "26125",
+    "last_id": "26126",
     "first_date": "2023-01-02",
-    "last_date": "2026-11-02",
+    "last_date": "2026-11-04",
     "history_start_date": "2023-01-01",
     "history_start_issue": "23001",
     "excluded_before_start": 0
   },
   "source": {
     "url": "https://datachart.500.com/dlt/history/history.shtml",
-    "sha256": "1aeb40cd82b603d9e792fe748cd5743299f34f268b98ee68934654aa0dbbadb3",
+    "sha256": "f5d16160d348c329a31faa21537c8e0db256a2eabbcd8b031a0f99f29f571071",
     "complete": false,
     "provenance_hash_matches": true,
     "warnings": [
@@ -23,7 +23,7 @@
       "仅验证输入结构与范围，不保证每年末期或全历史无缺漏。",
       "来源侧车与CSV哈希匹配，但不构成来源真实性的独立认证。"
     ],
-    "retrieved_at": "2026-11-02T22:51:17.695382+00:00"
+    "retrieved_at": "2026-11-04T20:53:55.823823+00:00"
   },
   "portfolios": {
     "coverage": {
@@ -36,26 +36,110 @@
         {
           "index": 1,
           "left": [
-            21,
-            23,
-            25,
-            28,
-            35
+            15,
+            18,
+            22,
+            24,
+            26
           ],
           "right": [
+            4,
+            10
+          ],
+          "left_features": {
+            "odd": 1,
+            "even": 4,
+            "small": 1,
+            "large": 4,
+            "sum": 105,
+            "span": 11,
+            "adjacent_pairs": 0,
+            "max_run": 1,
+            "repeat_previous": 0,
+            "hot": 1,
+            "warm": 4,
+            "cold": 0
+          },
+          "right_features": {
+            "odd": 0,
+            "even": 2,
+            "small": 1,
+            "large": 1,
+            "sum": 14,
+            "span": 6,
+            "adjacent_pairs": 0,
+            "max_run": 1,
+            "repeat_previous": 1,
+            "hot": 0,
+            "warm": 2,
+            "cold": 0
+          }
+        },
+        {
+          "index": 2,
+          "left": [
+            4,
+            5,
+            6,
+            25,
+            34
+          ],
+          "right": [
+            1,
+            3
+          ],
+          "left_features": {
+            "odd": 2,
+            "even": 3,
+            "small": 3,
+            "large": 2,
+            "sum": 74,
+            "span": 30,
+            "adjacent_pairs": 2,
+            "max_run": 3,
+            "repeat_previous": 3,
+            "hot": 0,
+            "warm": 5,
+            "cold": 0
+          },
+          "right_features": {
+            "odd": 2,
+            "even": 0,
+            "small": 2,
+            "large": 0,
+            "sum": 4,
+            "span": 2,
+            "adjacent_pairs": 0,
+            "max_run": 1,
+            "repeat_previous": 0,
+            "hot": 0,
+            "warm": 1,
+            "cold": 1
+          }
+        },
+        {
+          "index": 3,
+          "left": [
+            1,
             7,
-            12
+            9,
+            11,
+            30
+          ],
+          "right": [
+            2,
+            11
           ],
           "left_features": {
             "odd": 4,
             "even": 1,
-            "small": 0,
-            "large": 5,
-            "sum": 132,
-            "span": 14,
+            "small": 4,
+            "large": 1,
+            "sum": 58,
+            "span": 29,
             "adjacent_pairs": 0,
             "max_run": 1,
-            "repeat_previous": 2,
+            "repeat_previous": 1,
             "hot": 0,
             "warm": 4,
             "cold": 1
@@ -63,94 +147,10 @@
           "right_features": {
             "odd": 1,
             "even": 1,
-            "small": 0,
-            "large": 2,
-            "sum": 19,
-            "span": 5,
-            "adjacent_pairs": 0,
-            "max_run": 1,
-            "repeat_previous": 1,
-            "hot": 1,
-            "warm": 1,
-            "cold": 0
-          }
-        },
-        {
-          "index": 2,
-          "left": [
-            3,
-            13,
-            17,
-            26,
-            27
-          ],
-          "right": [
-            2,
-            6
-          ],
-          "left_features": {
-            "odd": 4,
-            "even": 1,
-            "small": 3,
-            "large": 2,
-            "sum": 86,
-            "span": 24,
-            "adjacent_pairs": 1,
-            "max_run": 2,
-            "repeat_previous": 1,
-            "hot": 3,
-            "warm": 2,
-            "cold": 0
-          },
-          "right_features": {
-            "odd": 0,
-            "even": 2,
-            "small": 2,
-            "large": 0,
-            "sum": 8,
-            "span": 4,
-            "adjacent_pairs": 0,
-            "max_run": 1,
-            "repeat_previous": 0,
-            "hot": 0,
-            "warm": 2,
-            "cold": 0
-          }
-        },
-        {
-          "index": 3,
-          "left": [
-            1,
-            4,
-            5,
-            29,
-            34
-          ],
-          "right": [
-            4,
-            8
-          ],
-          "left_features": {
-            "odd": 3,
-            "even": 2,
-            "small": 3,
-            "large": 2,
-            "sum": 73,
-            "span": 33,
-            "adjacent_pairs": 1,
-            "max_run": 2,
-            "repeat_previous": 1,
-            "hot": 0,
-            "warm": 4,
-            "cold": 1
-          },
-          "right_features": {
-            "odd": 0,
-            "even": 2,
             "small": 1,
             "large": 1,
-            "sum": 12,
-            "span": 4,
+            "sum": 13,
+            "span": 9,
             "adjacent_pairs": 0,
             "max_run": 1,
             "repeat_previous": 0,
@@ -162,124 +162,124 @@
         {
           "index": 4,
           "left": [
-            6,
-            14,
-            15,
+            8,
             16,
-            24
+            20,
+            28,
+            32
           ],
           "right": [
-            9,
-            11
+            7,
+            12
           ],
           "left_features": {
-            "odd": 1,
-            "even": 4,
-            "small": 4,
-            "large": 1,
-            "sum": 75,
-            "span": 18,
-            "adjacent_pairs": 2,
-            "max_run": 3,
-            "repeat_previous": 0,
-            "hot": 1,
-            "warm": 4,
-            "cold": 0
-          },
-          "right_features": {
-            "odd": 2,
-            "even": 0,
-            "small": 0,
-            "large": 2,
-            "sum": 20,
-            "span": 2,
+            "odd": 0,
+            "even": 5,
+            "small": 2,
+            "large": 3,
+            "sum": 104,
+            "span": 24,
             "adjacent_pairs": 0,
             "max_run": 1,
             "repeat_previous": 0,
             "hot": 0,
-            "warm": 2,
+            "warm": 5,
+            "cold": 0
+          },
+          "right_features": {
+            "odd": 1,
+            "even": 1,
+            "small": 0,
+            "large": 2,
+            "sum": 19,
+            "span": 5,
+            "adjacent_pairs": 0,
+            "max_run": 1,
+            "repeat_previous": 0,
+            "hot": 1,
+            "warm": 1,
             "cold": 0
           }
         },
         {
           "index": 5,
           "left": [
-            11,
             12,
-            19,
-            20,
-            30
+            14,
+            21,
+            33,
+            35
           ],
           "right": [
-            3,
-            10
+            5,
+            6
           ],
           "left_features": {
-            "odd": 2,
-            "even": 3,
+            "odd": 3,
+            "even": 2,
             "small": 2,
             "large": 3,
-            "sum": 92,
-            "span": 19,
-            "adjacent_pairs": 2,
-            "max_run": 2,
-            "repeat_previous": 1,
-            "hot": 1,
+            "sum": 115,
+            "span": 23,
+            "adjacent_pairs": 0,
+            "max_run": 1,
+            "repeat_previous": 0,
+            "hot": 2,
             "warm": 3,
-            "cold": 1
+            "cold": 0
           },
           "right_features": {
             "odd": 1,
             "even": 1,
-            "small": 1,
-            "large": 1,
-            "sum": 13,
-            "span": 7,
-            "adjacent_pairs": 0,
-            "max_run": 1,
+            "small": 2,
+            "large": 0,
+            "sum": 11,
+            "span": 1,
+            "adjacent_pairs": 1,
+            "max_run": 2,
             "repeat_previous": 1,
             "hot": 0,
-            "warm": 1,
-            "cold": 1
+            "warm": 2,
+            "cold": 0
           }
         }
       ],
       "coverage": {
         "left_union": [
           1,
-          3,
           4,
           5,
-          6,
-          11,
-          12,
-          13,
-          14,
-          15,
-          16,
-          17,
-          19,
-          20,
-          21,
-          23,
-          24,
-          25,
-          26,
-          27,
-          28,
-          29,
-          30,
-          34,
-          35
-        ],
-        "right_union": [
-          2,
-          3,
-          4,
           6,
           7,
           8,
           9,
+          11,
+          12,
+          14,
+          15,
+          16,
+          18,
+          20,
+          21,
+          22,
+          24,
+          25,
+          26,
+          28,
+          30,
+          32,
+          33,
+          34,
+          35
+        ],
+        "right_union": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
           10,
           11,
           12
@@ -355,7 +355,7 @@
         "max_left": 0,
         "max_right": 0
       },
-      "diversity_score": 37,
+      "diversity_score": 38,
       "candidate_partitions": 256,
       "sampling_attempts": 256,
       "space_size": 21425712,
@@ -388,7 +388,7 @@
             "sd": 3.499271061118826,
             "z": -0.9389710680668847,
             "label": "warm",
-            "gap": 5,
+            "gap": 6,
             "gap_censored": false
           },
           "2": {
@@ -400,7 +400,7 @@
             "sd": 3.499271061118826,
             "z": -0.36742346141747645,
             "label": "warm",
-            "gap": 3,
+            "gap": 4,
             "gap_censored": false
           },
           "3": {
@@ -412,7 +412,7 @@
             "sd": 3.499271061118826,
             "z": 1.0614455552060442,
             "label": "hot",
-            "gap": 6,
+            "gap": 7,
             "gap_censored": false
           },
           "4": {
@@ -424,19 +424,19 @@
             "sd": 3.499271061118826,
             "z": -0.6531972647421805,
             "label": "warm",
-            "gap": 8,
+            "gap": 9,
             "gap_censored": false
           },
           "5": {
             "number": 5,
             "window": 100,
-            "count": 10,
-            "rate": 0.1,
+            "count": 11,
+            "rate": 0.11,
             "expected": 14.285714285714285,
             "sd": 3.499271061118826,
-            "z": -1.2247448713915887,
-            "label": "cold",
-            "gap": 13,
+            "z": -0.9389710680668847,
+            "label": "warm",
+            "gap": 0,
             "gap_censored": false
           },
           "6": {
@@ -448,7 +448,7 @@
             "sd": 3.499271061118826,
             "z": 0.7756717518813401,
             "label": "warm",
-            "gap": 4,
+            "gap": 5,
             "gap_censored": false
           },
           "7": {
@@ -460,7 +460,7 @@
             "sd": 3.499271061118826,
             "z": -0.36742346141747645,
             "label": "warm",
-            "gap": 17,
+            "gap": 18,
             "gap_censored": false
           },
           "8": {
@@ -472,7 +472,7 @@
             "sd": 3.499271061118826,
             "z": -0.9389710680668847,
             "label": "warm",
-            "gap": 4,
+            "gap": 5,
             "gap_censored": false
           },
           "9": {
@@ -484,19 +484,19 @@
             "sd": 3.499271061118826,
             "z": -0.36742346141747645,
             "label": "warm",
-            "gap": 7,
+            "gap": 8,
             "gap_censored": false
           },
           "10": {
             "number": 10,
             "window": 100,
-            "count": 20,
-            "rate": 0.2,
+            "count": 19,
+            "rate": 0.19,
             "expected": 14.285714285714285,
             "sd": 3.499271061118826,
-            "z": 1.6329931618554523,
+            "z": 1.3472193585307484,
             "label": "hot",
-            "gap": 5,
+            "gap": 6,
             "gap_censored": false
           },
           "11": {
@@ -508,7 +508,7 @@
             "sd": 3.499271061118826,
             "z": -0.08164965809277232,
             "label": "warm",
-            "gap": 12,
+            "gap": 0,
             "gap_censored": false
           },
           "12": {
@@ -520,7 +520,7 @@
             "sd": 3.499271061118826,
             "z": 1.3472193585307484,
             "label": "hot",
-            "gap": 0,
+            "gap": 1,
             "gap_censored": false
           },
           "13": {
@@ -532,7 +532,7 @@
             "sd": 3.499271061118826,
             "z": 1.0614455552060442,
             "label": "hot",
-            "gap": 0,
+            "gap": 1,
             "gap_censored": false
           },
           "14": {
@@ -544,7 +544,7 @@
             "sd": 3.499271061118826,
             "z": 1.3472193585307484,
             "label": "hot",
-            "gap": 1,
+            "gap": 2,
             "gap_censored": false
           },
           "15": {
@@ -556,7 +556,7 @@
             "sd": 3.499271061118826,
             "z": 0.20412414523193181,
             "label": "warm",
-            "gap": 5,
+            "gap": 6,
             "gap_censored": false
           },
           "16": {
@@ -568,19 +568,19 @@
             "sd": 3.499271061118826,
             "z": -0.9389710680668847,
             "label": "warm",
-            "gap": 16,
+            "gap": 17,
             "gap_censored": false
           },
           "17": {
             "number": 17,
             "window": 100,
-            "count": 12,
-            "rate": 0.12,
+            "count": 13,
+            "rate": 0.13,
             "expected": 14.285714285714285,
             "sd": 3.499271061118826,
-            "z": -0.6531972647421805,
+            "z": -0.36742346141747645,
             "label": "warm",
-            "gap": 14,
+            "gap": 0,
             "gap_censored": false
           },
           "18": {
@@ -592,7 +592,7 @@
             "sd": 3.499271061118826,
             "z": -0.08164965809277232,
             "label": "warm",
-            "gap": 1,
+            "gap": 2,
             "gap_censored": false
           },
           "19": {
@@ -604,7 +604,7 @@
             "sd": 3.499271061118826,
             "z": -0.08164965809277232,
             "label": "warm",
-            "gap": 2,
+            "gap": 3,
             "gap_censored": false
           },
           "20": {
@@ -616,7 +616,7 @@
             "sd": 3.499271061118826,
             "z": 0.20412414523193181,
             "label": "warm",
-            "gap": 2,
+            "gap": 3,
             "gap_censored": false
           },
           "21": {
@@ -628,19 +628,19 @@
             "sd": 3.499271061118826,
             "z": 0.48989794855663593,
             "label": "warm",
-            "gap": 3,
+            "gap": 4,
             "gap_censored": false
           },
           "22": {
             "number": 22,
             "window": 100,
-            "count": 18,
-            "rate": 0.18,
+            "count": 17,
+            "rate": 0.17,
             "expected": 14.285714285714285,
             "sd": 3.499271061118826,
-            "z": 1.0614455552060442,
-            "label": "hot",
-            "gap": 1,
+            "z": 0.7756717518813401,
+            "label": "warm",
+            "gap": 2,
             "gap_censored": false
           },
           "23": {
@@ -652,7 +652,7 @@
             "sd": 3.499271061118826,
             "z": -1.2247448713915887,
             "label": "cold",
-            "gap": 0,
+            "gap": 1,
             "gap_censored": false
           },
           "24": {
@@ -664,17 +664,17 @@
             "sd": 3.499271061118826,
             "z": -0.08164965809277232,
             "label": "warm",
-            "gap": 3,
+            "gap": 4,
             "gap_censored": false
           },
           "25": {
             "number": 25,
             "window": 100,
-            "count": 14,
-            "rate": 0.14,
+            "count": 15,
+            "rate": 0.15,
             "expected": 14.285714285714285,
             "sd": 3.499271061118826,
-            "z": -0.08164965809277232,
+            "z": 0.20412414523193181,
             "label": "warm",
             "gap": 0,
             "gap_censored": false
@@ -682,13 +682,13 @@
           "26": {
             "number": 26,
             "window": 100,
-            "count": 23,
-            "rate": 0.23,
+            "count": 22,
+            "rate": 0.22,
             "expected": 14.285714285714285,
             "sd": 3.499271061118826,
-            "z": 2.4903145718295647,
+            "z": 2.204540768504861,
             "label": "hot",
-            "gap": 7,
+            "gap": 8,
             "gap_censored": false
           },
           "27": {
@@ -700,7 +700,7 @@
             "sd": 3.499271061118826,
             "z": 0.20412414523193181,
             "label": "warm",
-            "gap": 1,
+            "gap": 2,
             "gap_censored": false
           },
           "28": {
@@ -712,7 +712,7 @@
             "sd": 3.499271061118826,
             "z": -0.36742346141747645,
             "label": "warm",
-            "gap": 2,
+            "gap": 3,
             "gap_censored": false
           },
           "29": {
@@ -724,7 +724,7 @@
             "sd": 3.499271061118826,
             "z": 0.20412414523193181,
             "label": "warm",
-            "gap": 0,
+            "gap": 1,
             "gap_censored": false
           },
           "30": {
@@ -736,7 +736,7 @@
             "sd": 3.499271061118826,
             "z": -1.5105186747162929,
             "label": "cold",
-            "gap": 11,
+            "gap": 12,
             "gap_censored": false
           },
           "31": {
@@ -748,19 +748,19 @@
             "sd": 3.499271061118826,
             "z": -2.082066281365701,
             "label": "cold",
-            "gap": 8,
+            "gap": 9,
             "gap_censored": false
           },
           "32": {
             "number": 32,
             "window": 100,
-            "count": 15,
-            "rate": 0.15,
+            "count": 14,
+            "rate": 0.14,
             "expected": 14.285714285714285,
             "sd": 3.499271061118826,
-            "z": 0.20412414523193181,
+            "z": -0.08164965809277232,
             "label": "warm",
-            "gap": 5,
+            "gap": 6,
             "gap_censored": false
           },
           "33": {
@@ -772,19 +772,19 @@
             "sd": 3.499271061118826,
             "z": 0.7756717518813401,
             "label": "warm",
-            "gap": 10,
+            "gap": 11,
             "gap_censored": false
           },
           "34": {
             "number": 34,
             "window": 100,
-            "count": 13,
-            "rate": 0.13,
+            "count": 14,
+            "rate": 0.14,
             "expected": 14.285714285714285,
             "sd": 3.499271061118826,
-            "z": -0.36742346141747645,
+            "z": -0.08164965809277232,
             "label": "warm",
-            "gap": 16,
+            "gap": 0,
             "gap_censored": false
           },
           "35": {
@@ -796,7 +796,7 @@
             "sd": 3.499271061118826,
             "z": -0.6531972647421805,
             "label": "warm",
-            "gap": 9,
+            "gap": 10,
             "gap_censored": false
           }
         },
@@ -804,13 +804,13 @@
           "1": {
             "number": 1,
             "window": 100,
-            "count": 19,
-            "rate": 0.19,
+            "count": 18,
+            "rate": 0.18,
             "expected": 16.666666666666664,
             "sd": 3.7267799624996494,
-            "z": 0.6260990336999418,
+            "z": 0.357770876399967,
             "label": "warm",
-            "gap": 1,
+            "gap": 2,
             "gap_censored": false
           },
           "2": {
@@ -822,7 +822,7 @@
             "sd": 3.7267799624996494,
             "z": 0.357770876399967,
             "label": "warm",
-            "gap": 3,
+            "gap": 4,
             "gap_censored": false
           },
           "3": {
@@ -834,19 +834,19 @@
             "sd": 3.7267799624996494,
             "z": -2.325510696599781,
             "label": "cold",
-            "gap": 5,
+            "gap": 6,
             "gap_censored": false
           },
           "4": {
             "number": 4,
             "window": 100,
-            "count": 18,
-            "rate": 0.18,
+            "count": 19,
+            "rate": 0.19,
             "expected": 16.666666666666664,
             "sd": 3.7267799624996494,
-            "z": 0.357770876399967,
+            "z": 0.6260990336999418,
             "label": "warm",
-            "gap": 5,
+            "gap": 0,
             "gap_censored": false
           },
           "5": {
@@ -858,19 +858,19 @@
             "sd": 3.7267799624996494,
             "z": -0.4472135954999573,
             "label": "warm",
-            "gap": 30,
+            "gap": 31,
             "gap_censored": false
           },
           "6": {
             "number": 6,
             "window": 100,
-            "count": 13,
-            "rate": 0.13,
+            "count": 14,
+            "rate": 0.14,
             "expected": 16.666666666666664,
             "sd": 3.7267799624996494,
-            "z": -0.9838699100999069,
+            "z": -0.715541752799932,
             "label": "warm",
-            "gap": 7,
+            "gap": 0,
             "gap_censored": false
           },
           "7": {
@@ -882,19 +882,19 @@
             "sd": 3.7267799624996494,
             "z": 1.1627553482998914,
             "label": "hot",
-            "gap": 0,
+            "gap": 1,
             "gap_censored": false
           },
           "8": {
             "number": 8,
             "window": 100,
-            "count": 18,
-            "rate": 0.18,
+            "count": 17,
+            "rate": 0.17,
             "expected": 16.666666666666664,
             "sd": 3.7267799624996494,
-            "z": 0.357770876399967,
+            "z": 0.08944271909999223,
             "label": "warm",
-            "gap": 4,
+            "gap": 5,
             "gap_censored": false
           },
           "9": {
@@ -906,7 +906,7 @@
             "sd": 3.7267799624996494,
             "z": 0.6260990336999418,
             "label": "warm",
-            "gap": 1,
+            "gap": 2,
             "gap_censored": false
           },
           "10": {
@@ -918,7 +918,7 @@
             "sd": 3.7267799624996494,
             "z": -0.17888543819998254,
             "label": "warm",
-            "gap": 0,
+            "gap": 1,
             "gap_censored": false
           },
           "11": {
@@ -930,7 +930,7 @@
             "sd": 3.7267799624996494,
             "z": -0.17888543819998254,
             "label": "warm",
-            "gap": 2,
+            "gap": 3,
             "gap_censored": false
           },
           "12": {
@@ -942,7 +942,7 @@
             "sd": 3.7267799624996494,
             "z": 0.6260990336999418,
             "label": "warm",
-            "gap": 3,
+            "gap": 4,
             "gap_censored": false
           }
         },
@@ -979,7 +979,7 @@
             "span": 30,
             "adjacent_pairs": 0,
             "max_run": 1,
-            "repeat_previous": 1,
+            "repeat_previous": 2,
             "hot": 1,
             "warm": 4,
             "cold": 0
@@ -993,7 +993,7 @@
             "span": 1,
             "adjacent_pairs": 1,
             "max_run": 2,
-            "repeat_previous": 1,
+            "repeat_previous": 0,
             "hot": 1,
             "warm": 1,
             "cold": 0
@@ -1021,7 +1021,7 @@
             "span": 19,
             "adjacent_pairs": 0,
             "max_run": 1,
-            "repeat_previous": 1,
+            "repeat_previous": 0,
             "hot": 1,
             "warm": 2,
             "cold": 2
@@ -1063,7 +1063,7 @@
             "span": 28,
             "adjacent_pairs": 1,
             "max_run": 2,
-            "repeat_previous": 0,
+            "repeat_previous": 1,
             "hot": 1,
             "warm": 4,
             "cold": 0
@@ -1106,9 +1106,9 @@
             "adjacent_pairs": 1,
             "max_run": 2,
             "repeat_previous": 1,
-            "hot": 1,
-            "warm": 1,
-            "cold": 3
+            "hot": 0,
+            "warm": 3,
+            "cold": 2
           },
           "right_features": {
             "odd": 1,
@@ -1147,7 +1147,7 @@
             "span": 20,
             "adjacent_pairs": 0,
             "max_run": 1,
-            "repeat_previous": 1,
+            "repeat_previous": 2,
             "hot": 1,
             "warm": 3,
             "cold": 1
@@ -1269,7 +1269,7 @@
         "max_left": 2,
         "max_right": 1
       },
-      "diversity_score": 31,
+      "diversity_score": 32,
       "candidate_partitions": 1,
       "sampling_attempts": 5,
       "space_size": 21425712,
@@ -1302,7 +1302,7 @@
             "sd": 3.499271061118826,
             "z": -0.9389710680668847,
             "label": "warm",
-            "gap": 5,
+            "gap": 6,
             "gap_censored": false
           },
           "2": {
@@ -1314,7 +1314,7 @@
             "sd": 3.499271061118826,
             "z": -0.36742346141747645,
             "label": "warm",
-            "gap": 3,
+            "gap": 4,
             "gap_censored": false
           },
           "3": {
@@ -1326,7 +1326,7 @@
             "sd": 3.499271061118826,
             "z": 1.0614455552060442,
             "label": "hot",
-            "gap": 6,
+            "gap": 7,
             "gap_censored": false
           },
           "4": {
@@ -1338,19 +1338,19 @@
             "sd": 3.499271061118826,
             "z": -0.6531972647421805,
             "label": "warm",
-            "gap": 8,
+            "gap": 9,
             "gap_censored": false
           },
           "5": {
             "number": 5,
             "window": 100,
-            "count": 10,
-            "rate": 0.1,
+            "count": 11,
+            "rate": 0.11,
             "expected": 14.285714285714285,
             "sd": 3.499271061118826,
-            "z": -1.2247448713915887,
-            "label": "cold",
-            "gap": 13,
+            "z": -0.9389710680668847,
+            "label": "warm",
+            "gap": 0,
             "gap_censored": false
           },
           "6": {
@@ -1362,7 +1362,7 @@
             "sd": 3.499271061118826,
             "z": 0.7756717518813401,
             "label": "warm",
-            "gap": 4,
+            "gap": 5,
             "gap_censored": false
           },
           "7": {
@@ -1374,7 +1374,7 @@
             "sd": 3.499271061118826,
             "z": -0.36742346141747645,
             "label": "warm",
-            "gap": 17,
+            "gap": 18,
             "gap_censored": false
           },
           "8": {
@@ -1386,7 +1386,7 @@
             "sd": 3.499271061118826,
             "z": -0.9389710680668847,
             "label": "warm",
-            "gap": 4,
+            "gap": 5,
             "gap_censored": false
           },
           "9": {
@@ -1398,19 +1398,19 @@
             "sd": 3.499271061118826,
             "z": -0.36742346141747645,
             "label": "warm",
-            "gap": 7,
+            "gap": 8,
             "gap_censored": false
           },
           "10": {
             "number": 10,
             "window": 100,
-            "count": 20,
-            "rate": 0.2,
+            "count": 19,
+            "rate": 0.19,
             "expected": 14.285714285714285,
             "sd": 3.499271061118826,
-            "z": 1.6329931618554523,
+            "z": 1.3472193585307484,
             "label": "hot",
-            "gap": 5,
+            "gap": 6,
             "gap_censored": false
           },
           "11": {
@@ -1422,7 +1422,7 @@
             "sd": 3.499271061118826,
             "z": -0.08164965809277232,
             "label": "warm",
-            "gap": 12,
+            "gap": 0,
             "gap_censored": false
           },
           "12": {
@@ -1434,7 +1434,7 @@
             "sd": 3.499271061118826,
             "z": 1.3472193585307484,
             "label": "hot",
-            "gap": 0,
+            "gap": 1,
             "gap_censored": false
           },
           "13": {
@@ -1446,7 +1446,7 @@
             "sd": 3.499271061118826,
             "z": 1.0614455552060442,
             "label": "hot",
-            "gap": 0,
+            "gap": 1,
             "gap_censored": false
           },
           "14": {
@@ -1458,7 +1458,7 @@
             "sd": 3.499271061118826,
             "z": 1.3472193585307484,
             "label": "hot",
-            "gap": 1,
+            "gap": 2,
             "gap_censored": false
           },
           "15": {
@@ -1470,7 +1470,7 @@
             "sd": 3.499271061118826,
             "z": 0.20412414523193181,
             "label": "warm",
-            "gap": 5,
+            "gap": 6,
             "gap_censored": false
           },
           "16": {
@@ -1482,19 +1482,19 @@
             "sd": 3.499271061118826,
             "z": -0.9389710680668847,
             "label": "warm",
-            "gap": 16,
+            "gap": 17,
             "gap_censored": false
           },
           "17": {
             "number": 17,
             "window": 100,
-            "count": 12,
-            "rate": 0.12,
+            "count": 13,
+            "rate": 0.13,
             "expected": 14.285714285714285,
             "sd": 3.499271061118826,
-            "z": -0.6531972647421805,
+            "z": -0.36742346141747645,
             "label": "warm",
-            "gap": 14,
+            "gap": 0,
             "gap_censored": false
           },
           "18": {
@@ -1506,7 +1506,7 @@
             "sd": 3.499271061118826,
             "z": -0.08164965809277232,
             "label": "warm",
-            "gap": 1,
+            "gap": 2,
             "gap_censored": false
           },
           "19": {
@@ -1518,7 +1518,7 @@
             "sd": 3.499271061118826,
             "z": -0.08164965809277232,
             "label": "warm",
-            "gap": 2,
+            "gap": 3,
             "gap_censored": false
           },
           "20": {
@@ -1530,7 +1530,7 @@
             "sd": 3.499271061118826,
             "z": 0.20412414523193181,
             "label": "warm",
-            "gap": 2,
+            "gap": 3,
             "gap_censored": false
           },
           "21": {
@@ -1542,19 +1542,19 @@
             "sd": 3.499271061118826,
             "z": 0.48989794855663593,
             "label": "warm",
-            "gap": 3,
+            "gap": 4,
             "gap_censored": false
           },
           "22": {
             "number": 22,
             "window": 100,
-            "count": 18,
-            "rate": 0.18,
+            "count": 17,
+            "rate": 0.17,
             "expected": 14.285714285714285,
             "sd": 3.499271061118826,
-            "z": 1.0614455552060442,
-            "label": "hot",
-            "gap": 1,
+            "z": 0.7756717518813401,
+            "label": "warm",
+            "gap": 2,
             "gap_censored": false
           },
           "23": {
@@ -1566,7 +1566,7 @@
             "sd": 3.499271061118826,
             "z": -1.2247448713915887,
             "label": "cold",
-            "gap": 0,
+            "gap": 1,
             "gap_censored": false
           },
           "24": {
@@ -1578,17 +1578,17 @@
             "sd": 3.499271061118826,
             "z": -0.08164965809277232,
             "label": "warm",
-            "gap": 3,
+            "gap": 4,
             "gap_censored": false
           },
           "25": {
             "number": 25,
             "window": 100,
-            "count": 14,
-            "rate": 0.14,
+            "count": 15,
+            "rate": 0.15,
             "expected": 14.285714285714285,
             "sd": 3.499271061118826,
-            "z": -0.08164965809277232,
+            "z": 0.20412414523193181,
             "label": "warm",
             "gap": 0,
             "gap_censored": false
@@ -1596,13 +1596,13 @@
           "26": {
             "number": 26,
             "window": 100,
-            "count": 23,
-            "rate": 0.23,
+            "count": 22,
+            "rate": 0.22,
             "expected": 14.285714285714285,
             "sd": 3.499271061118826,
-            "z": 2.4903145718295647,
+            "z": 2.204540768504861,
             "label": "hot",
-            "gap": 7,
+            "gap": 8,
             "gap_censored": false
           },
           "27": {
@@ -1614,7 +1614,7 @@
             "sd": 3.499271061118826,
             "z": 0.20412414523193181,
             "label": "warm",
-            "gap": 1,
+            "gap": 2,
             "gap_censored": false
           },
           "28": {
@@ -1626,7 +1626,7 @@
             "sd": 3.499271061118826,
             "z": -0.36742346141747645,
             "label": "warm",
-            "gap": 2,
+            "gap": 3,
             "gap_censored": false
           },
           "29": {
@@ -1638,7 +1638,7 @@
             "sd": 3.499271061118826,
             "z": 0.20412414523193181,
             "label": "warm",
-            "gap": 0,
+            "gap": 1,
             "gap_censored": false
           },
           "30": {
@@ -1650,7 +1650,7 @@
             "sd": 3.499271061118826,
             "z": -1.5105186747162929,
             "label": "cold",
-            "gap": 11,
+            "gap": 12,
             "gap_censored": false
           },
           "31": {
@@ -1662,19 +1662,19 @@
             "sd": 3.499271061118826,
             "z": -2.082066281365701,
             "label": "cold",
-            "gap": 8,
+            "gap": 9,
             "gap_censored": false
           },
           "32": {
             "number": 32,
             "window": 100,
-            "count": 15,
-            "rate": 0.15,
+            "count": 14,
+            "rate": 0.14,
             "expected": 14.285714285714285,
             "sd": 3.499271061118826,
-            "z": 0.20412414523193181,
+            "z": -0.08164965809277232,
             "label": "warm",
-            "gap": 5,
+            "gap": 6,
             "gap_censored": false
           },
           "33": {
@@ -1686,19 +1686,19 @@
             "sd": 3.499271061118826,
             "z": 0.7756717518813401,
             "label": "warm",
-            "gap": 10,
+            "gap": 11,
             "gap_censored": false
           },
           "34": {
             "number": 34,
             "window": 100,
-            "count": 13,
-            "rate": 0.13,
+            "count": 14,
+            "rate": 0.14,
             "expected": 14.285714285714285,
             "sd": 3.499271061118826,
-            "z": -0.36742346141747645,
+            "z": -0.08164965809277232,
             "label": "warm",
-            "gap": 16,
+            "gap": 0,
             "gap_censored": false
           },
           "35": {
@@ -1710,7 +1710,7 @@
             "sd": 3.499271061118826,
             "z": -0.6531972647421805,
             "label": "warm",
-            "gap": 9,
+            "gap": 10,
             "gap_censored": false
           }
         },
@@ -1718,13 +1718,13 @@
           "1": {
             "number": 1,
             "window": 100,
-            "count": 19,
-            "rate": 0.19,
+            "count": 18,
+            "rate": 0.18,
             "expected": 16.666666666666664,
             "sd": 3.7267799624996494,
-            "z": 0.6260990336999418,
+            "z": 0.357770876399967,
             "label": "warm",
-            "gap": 1,
+            "gap": 2,
             "gap_censored": false
           },
           "2": {
@@ -1736,7 +1736,7 @@
             "sd": 3.7267799624996494,
             "z": 0.357770876399967,
             "label": "warm",
-            "gap": 3,
+            "gap": 4,
             "gap_censored": false
           },
           "3": {
@@ -1748,19 +1748,19 @@
             "sd": 3.7267799624996494,
             "z": -2.325510696599781,
             "label": "cold",
-            "gap": 5,
+            "gap": 6,
             "gap_censored": false
           },
           "4": {
             "number": 4,
             "window": 100,
-            "count": 18,
-            "rate": 0.18,
+            "count": 19,
+            "rate": 0.19,
             "expected": 16.666666666666664,
             "sd": 3.7267799624996494,
-            "z": 0.357770876399967,
+            "z": 0.6260990336999418,
             "label": "warm",
-            "gap": 5,
+            "gap": 0,
             "gap_censored": false
           },
           "5": {
@@ -1772,19 +1772,19 @@
             "sd": 3.7267799624996494,
             "z": -0.4472135954999573,
             "label": "warm",
-            "gap": 30,
+            "gap": 31,
             "gap_censored": false
           },
           "6": {
             "number": 6,
             "window": 100,
-            "count": 13,
-            "rate": 0.13,
+            "count": 14,
+            "rate": 0.14,
             "expected": 16.666666666666664,
             "sd": 3.7267799624996494,
-            "z": -0.9838699100999069,
+            "z": -0.715541752799932,
             "label": "warm",
-            "gap": 7,
+            "gap": 0,
             "gap_censored": false
           },
           "7": {
@@ -1796,19 +1796,19 @@
             "sd": 3.7267799624996494,
             "z": 1.1627553482998914,
             "label": "hot",
-            "gap": 0,
+            "gap": 1,
             "gap_censored": false
           },
           "8": {
             "number": 8,
             "window": 100,
-            "count": 18,
-            "rate": 0.18,
+            "count": 17,
+            "rate": 0.17,
             "expected": 16.666666666666664,
             "sd": 3.7267799624996494,
-            "z": 0.357770876399967,
+            "z": 0.08944271909999223,
             "label": "warm",
-            "gap": 4,
+            "gap": 5,
             "gap_censored": false
           },
           "9": {
@@ -1820,7 +1820,7 @@
             "sd": 3.7267799624996494,
             "z": 0.6260990336999418,
             "label": "warm",
-            "gap": 1,
+            "gap": 2,
             "gap_censored": false
           },
           "10": {
@@ -1832,7 +1832,7 @@
             "sd": 3.7267799624996494,
             "z": -0.17888543819998254,
             "label": "warm",
-            "gap": 0,
+            "gap": 1,
             "gap_censored": false
           },
           "11": {
@@ -1844,7 +1844,7 @@
             "sd": 3.7267799624996494,
             "z": -0.17888543819998254,
             "label": "warm",
-            "gap": 2,
+            "gap": 3,
             "gap_censored": false
           },
           "12": {
@@ -1856,7 +1856,7 @@
             "sd": 3.7267799624996494,
             "z": 0.6260990336999418,
             "label": "warm",
-            "gap": 3,
+            "gap": 4,
             "gap_censored": false
           }
         },
@@ -1886,7 +1886,7 @@
         },
         {
           "value": 4,
-          "count": 88
+          "count": 89
         },
         {
           "value": 5,
@@ -1908,7 +1908,7 @@
         },
         {
           "value": 3,
-          "count": 190
+          "count": 191
         },
         {
           "value": 4,
@@ -2130,7 +2130,7 @@
         },
         {
           "value": 92,
-          "count": 6
+          "count": 7
         },
         {
           "value": 93,
@@ -2420,7 +2420,7 @@
         },
         {
           "value": 29,
-          "count": 30
+          "count": 31
         },
         {
           "value": 30,
@@ -2446,7 +2446,7 @@
       "adjacent_pairs": [
         {
           "value": 0,
-          "count": 291
+          "count": 292
         },
         {
           "value": 1,
@@ -2468,7 +2468,7 @@
         },
         {
           "value": 1,
-          "count": 238
+          "count": 239
         },
         {
           "value": 2,
@@ -2480,19 +2480,19 @@
         }
       ],
       "sample_sizes": {
-        "odd": 577,
-        "small": 577,
-        "sum": 577,
-        "span": 577,
-        "adjacent_pairs": 577,
-        "repeat_previous": 576
+        "odd": 578,
+        "small": 578,
+        "sum": 578,
+        "span": 578,
+        "adjacent_pairs": 578,
+        "repeat_previous": 577
       }
     },
     "right": {
       "odd": [
         {
           "value": 0,
-          "count": 129
+          "count": 130
         },
         {
           "value": 1,
@@ -2514,7 +2514,7 @@
         },
         {
           "value": 2,
-          "count": 117
+          "count": 118
         }
       ],
       "sum": [
@@ -2548,7 +2548,7 @@
         },
         {
           "value": 10,
-          "count": 34
+          "count": 35
         },
         {
           "value": 11,
@@ -2610,7 +2610,7 @@
         },
         {
           "value": 2,
-          "count": 77
+          "count": 78
         },
         {
           "value": 3,
@@ -2652,7 +2652,7 @@
       "adjacent_pairs": [
         {
           "value": 0,
-          "count": 481
+          "count": 482
         },
         {
           "value": 1,
@@ -2662,7 +2662,7 @@
       "repeat_previous": [
         {
           "value": 0,
-          "count": 382
+          "count": 383
         },
         {
           "value": 1,
@@ -2674,16 +2674,31 @@
         }
       ],
       "sample_sizes": {
-        "odd": 577,
-        "small": 577,
-        "sum": 577,
-        "span": 577,
-        "adjacent_pairs": 577,
-        "repeat_previous": 576
+        "odd": 578,
+        "small": 578,
+        "sum": 578,
+        "span": 578,
+        "adjacent_pairs": 578,
+        "repeat_previous": 577
       }
     }
   },
   "recent_draws": [
+    {
+      "id": "26126",
+      "date": "2026-11-04",
+      "left": [
+        5,
+        11,
+        17,
+        25,
+        34
+      ],
+      "right": [
+        4,
+        6
+      ]
+    },
     {
       "id": "26125",
       "date": "2026-11-02",
@@ -2787,21 +2802,6 @@
       "right": [
         4,
         7
-      ]
-    },
-    {
-      "id": "26118",
-      "date": "2026-10-17",
-      "left": [
-        2,
-        9,
-        21,
-        26,
-        32
-      ],
-      "right": [
-        6,
-        12
       ]
     }
   ]
