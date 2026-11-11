@@ -3,19 +3,19 @@
   "model_sha256": "198613dddb8d5a980c0300929505e5b2791de65b8907d82568a0986772dd27d4",
   "research_sha256": "a3006395b25b2f616244fda564021bfa5cb7057a6f5398ad40d2d2d829581f60",
   "conditional_core_sha256": "845c8dc4db3782e8ff8f909b7e836abbc45d02b697cc5bb0fea8e5d4e2f46f26",
-  "data_sha256": "f27619d7b8cbbbe431331df28b4d8a04a598329ee8c2fcf47b59fc72964b8bb6",
+  "data_sha256": "25e04a91d86b2d1915a2e0d5e5255860e9d4e638c497f30ed0875a1cccc7b26e",
   "history": {
-    "rows": 580,
+    "rows": 581,
     "first_id": "23001",
-    "last_id": "26128",
+    "last_id": "26129",
     "first_date": "2023-01-02",
-    "last_date": "2026-11-09",
+    "last_date": "2026-11-11",
     "history_start_date": "2023-01-01",
     "history_start_issue": "23001"
   },
   "source": {
     "url": "https://datachart.500.com/dlt/history/history.shtml",
-    "sha256": "f1bb7db5a577f0180bbf7793f3ded798354b05615168d6e8adef578fba4e9b76",
+    "sha256": "aa19617fa9610993f7ccdcd34b97a10a920f3dc2b31bc8a83e61bf57772ee4f3",
     "complete": false,
     "provenance_hash_matches": true,
     "warnings": [
@@ -23,6 +23,6 @@
       "仅验证输入结构与范围，不保证每年末期或全历史无缺漏。",
       "来源侧车与CSV哈希匹配，但不构成来源真实性的独立认证。"
     ],
-    "retrieved_at": "2026-11-09T23:30:17.099140+00:00"
+    "retrieved_at": "2026-11-11T21:29:59.207834+00:00"
   }
 }
