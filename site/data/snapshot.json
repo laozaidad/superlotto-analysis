@@ -1,21 +1,21 @@
 {
   "schema_version": 1,
   "title": "大乐透选号分析",
-  "generated_at": "2026-11-11T21:29:59.238602+00:00",
+  "generated_at": "2026-11-14T19:23:47.297612+00:00",
   "description": "截至历史末期的统计与组合设计展示，不指定目标期，不代表预测结果或购彩建议。",
   "history": {
-    "rows": 581,
+    "rows": 582,
     "first_id": "23001",
-    "last_id": "26129",
+    "last_id": "26130",
     "first_date": "2023-01-02",
-    "last_date": "2026-11-11",
+    "last_date": "2026-11-14",
     "history_start_date": "2023-01-01",
     "history_start_issue": "23001",
     "excluded_before_start": 0
   },
   "source": {
     "url": "https://datachart.500.com/dlt/history/history.shtml",
-    "sha256": "aa19617fa9610993f7ccdcd34b97a10a920f3dc2b31bc8a83e61bf57772ee4f3",
+    "sha256": "55262694992b4a23f4c4aea8389bdf60625610b9f00f1871ba830c87bd4e2a7f",
     "complete": false,
     "provenance_hash_matches": true,
     "warnings": [
@@ -23,7 +23,7 @@
       "仅验证输入结构与范围，不保证每年末期或全历史无缺漏。",
       "来源侧车与CSV哈希匹配，但不构成来源真实性的独立认证。"
     ],
-    "retrieved_at": "2026-11-11T21:29:59.207834+00:00"
+    "retrieved_at": "2026-11-14T19:23:47.269946+00:00"
   },
   "portfolios": {
     "coverage": {
@@ -36,36 +36,120 @@
         {
           "index": 1,
           "left": [
-            20,
-            22,
+            21,
+            23,
             25,
-            26,
-            29
+            28,
+            35
           ],
           "right": [
-            5,
-            9
+            7,
+            12
           ],
           "left_features": {
-            "odd": 2,
-            "even": 3,
+            "odd": 4,
+            "even": 1,
             "small": 0,
             "large": 5,
-            "sum": 122,
-            "span": 9,
-            "adjacent_pairs": 1,
-            "max_run": 2,
+            "sum": 132,
+            "span": 14,
+            "adjacent_pairs": 0,
+            "max_run": 1,
+            "repeat_previous": 0,
+            "hot": 0,
+            "warm": 4,
+            "cold": 1
+          },
+          "right_features": {
+            "odd": 1,
+            "even": 1,
+            "small": 0,
+            "large": 2,
+            "sum": 19,
+            "span": 5,
+            "adjacent_pairs": 0,
+            "max_run": 1,
             "repeat_previous": 0,
             "hot": 1,
-            "warm": 4,
+            "warm": 1,
+            "cold": 0
+          }
+        },
+        {
+          "index": 2,
+          "left": [
+            3,
+            13,
+            17,
+            26,
+            27
+          ],
+          "right": [
+            2,
+            6
+          ],
+          "left_features": {
+            "odd": 4,
+            "even": 1,
+            "small": 3,
+            "large": 2,
+            "sum": 86,
+            "span": 24,
+            "adjacent_pairs": 1,
+            "max_run": 2,
+            "repeat_previous": 1,
+            "hot": 3,
+            "warm": 2,
             "cold": 0
           },
           "right_features": {
-            "odd": 2,
-            "even": 0,
+            "odd": 0,
+            "even": 2,
+            "small": 2,
+            "large": 0,
+            "sum": 8,
+            "span": 4,
+            "adjacent_pairs": 0,
+            "max_run": 1,
+            "repeat_previous": 2,
+            "hot": 0,
+            "warm": 2,
+            "cold": 0
+          }
+        },
+        {
+          "index": 3,
+          "left": [
+            1,
+            4,
+            5,
+            29,
+            34
+          ],
+          "right": [
+            4,
+            8
+          ],
+          "left_features": {
+            "odd": 3,
+            "even": 2,
+            "small": 3,
+            "large": 2,
+            "sum": 73,
+            "span": 33,
+            "adjacent_pairs": 1,
+            "max_run": 2,
+            "repeat_previous": 2,
+            "hot": 0,
+            "warm": 5,
+            "cold": 0
+          },
+          "right_features": {
+            "odd": 0,
+            "even": 2,
             "small": 1,
             "large": 1,
-            "sum": 14,
+            "sum": 12,
             "span": 4,
             "adjacent_pairs": 0,
             "max_run": 1,
@@ -76,123 +160,39 @@
           }
         },
         {
-          "index": 2,
+          "index": 4,
           "left": [
-            9,
-            12,
-            15,
-            19,
-            35
-          ],
-          "right": [
-            2,
-            11
-          ],
-          "left_features": {
-            "odd": 4,
-            "even": 1,
-            "small": 3,
-            "large": 2,
-            "sum": 90,
-            "span": 26,
-            "adjacent_pairs": 0,
-            "max_run": 1,
-            "repeat_previous": 1,
-            "hot": 1,
-            "warm": 4,
-            "cold": 0
-          },
-          "right_features": {
-            "odd": 1,
-            "even": 1,
-            "small": 1,
-            "large": 1,
-            "sum": 13,
-            "span": 9,
-            "adjacent_pairs": 0,
-            "max_run": 1,
-            "repeat_previous": 0,
-            "hot": 0,
-            "warm": 2,
-            "cold": 0
-          }
-        },
-        {
-          "index": 3,
-          "left": [
-            7,
-            8,
-            10,
+            6,
             14,
-            32
+            15,
+            16,
+            24
           ],
           "right": [
-            7,
-            8
+            9,
+            11
           ],
           "left_features": {
             "odd": 1,
             "even": 4,
             "small": 4,
             "large": 1,
-            "sum": 71,
-            "span": 25,
-            "adjacent_pairs": 1,
-            "max_run": 2,
-            "repeat_previous": 1,
-            "hot": 2,
-            "warm": 3,
-            "cold": 0
-          },
-          "right_features": {
-            "odd": 1,
-            "even": 1,
-            "small": 0,
-            "large": 2,
-            "sum": 15,
-            "span": 1,
-            "adjacent_pairs": 1,
-            "max_run": 2,
-            "repeat_previous": 2,
-            "hot": 1,
-            "warm": 1,
-            "cold": 0
-          }
-        },
-        {
-          "index": 4,
-          "left": [
-            1,
-            4,
-            27,
-            28,
-            31
-          ],
-          "right": [
-            4,
-            10
-          ],
-          "left_features": {
-            "odd": 3,
-            "even": 2,
-            "small": 2,
-            "large": 3,
-            "sum": 91,
-            "span": 30,
-            "adjacent_pairs": 1,
-            "max_run": 2,
+            "sum": 75,
+            "span": 18,
+            "adjacent_pairs": 2,
+            "max_run": 3,
             "repeat_previous": 0,
-            "hot": 0,
-            "warm": 4,
+            "hot": 2,
+            "warm": 2,
             "cold": 1
           },
           "right_features": {
-            "odd": 0,
-            "even": 2,
-            "small": 1,
-            "large": 1,
-            "sum": 14,
-            "span": 6,
+            "odd": 2,
+            "even": 0,
+            "small": 0,
+            "large": 2,
+            "sum": 20,
+            "span": 2,
             "adjacent_pairs": 0,
             "max_run": 1,
             "repeat_previous": 0,
@@ -204,85 +204,85 @@
         {
           "index": 5,
           "left": [
-            2,
-            3,
-            18,
-            24,
-            33
+            11,
+            12,
+            19,
+            20,
+            30
           ],
           "right": [
-            1,
-            6
+            3,
+            10
           ],
           "left_features": {
             "odd": 2,
             "even": 3,
             "small": 2,
             "large": 3,
-            "sum": 80,
-            "span": 31,
-            "adjacent_pairs": 1,
+            "sum": 92,
+            "span": 19,
+            "adjacent_pairs": 2,
             "max_run": 2,
-            "repeat_previous": 2,
+            "repeat_previous": 1,
             "hot": 1,
-            "warm": 4,
-            "cold": 0
+            "warm": 3,
+            "cold": 1
           },
           "right_features": {
             "odd": 1,
             "even": 1,
-            "small": 2,
-            "large": 0,
-            "sum": 7,
-            "span": 5,
+            "small": 1,
+            "large": 1,
+            "sum": 13,
+            "span": 7,
             "adjacent_pairs": 0,
             "max_run": 1,
             "repeat_previous": 0,
             "hot": 0,
-            "warm": 2,
-            "cold": 0
+            "warm": 1,
+            "cold": 1
           }
         }
       ],
       "coverage": {
         "left_union": [
           1,
-          2,
           3,
           4,
-          7,
-          8,
-          9,
-          10,
+          5,
+          6,
+          11,
           12,
+          13,
           14,
           15,
-          18,
+          16,
+          17,
           19,
           20,
-          22,
+          21,
+          23,
           24,
           25,
           26,
           27,
           28,
           29,
-          31,
-          32,
-          33,
+          30,
+          34,
           35
         ],
         "right_union": [
-          1,
           2,
+          3,
           4,
-          5,
           6,
           7,
           8,
           9,
           10,
-          11
+          11,
+          12
         ],
         "left_count": 25,
         "right_count": 10,
@@ -382,25 +382,25 @@
           "1": {
             "number": 1,
             "window": 100,
-            "count": 11,
-            "rate": 0.11,
+            "count": 12,
+            "rate": 0.12,
             "expected": 14.285714285714285,
             "sd": 3.499271061118826,
-            "z": -0.9389710680668847,
+            "z": -0.6531972647421805,
             "label": "warm",
-            "gap": 9,
+            "gap": 0,
             "gap_censored": false
           },
           "2": {
             "number": 2,
             "window": 100,
-            "count": 14,
-            "rate": 0.14,
+            "count": 13,
+            "rate": 0.13,
             "expected": 14.285714285714285,
             "sd": 3.499271061118826,
-            "z": -0.08164965809277232,
+            "z": -0.36742346141747645,
             "label": "warm",
-            "gap": 0,
+            "gap": 1,
             "gap_censored": false
           },
           "3": {
@@ -412,7 +412,7 @@
             "sd": 3.499271061118826,
             "z": 1.0614455552060442,
             "label": "hot",
-            "gap": 1,
+            "gap": 2,
             "gap_censored": false
           },
           "4": {
@@ -424,7 +424,7 @@
             "sd": 3.499271061118826,
             "z": -0.6531972647421805,
             "label": "warm",
-            "gap": 12,
+            "gap": 13,
             "gap_censored": false
           },
           "5": {
@@ -436,7 +436,7 @@
             "sd": 3.499271061118826,
             "z": -0.9389710680668847,
             "label": "warm",
-            "gap": 2,
+            "gap": 3,
             "gap_censored": false
           },
           "6": {
@@ -448,19 +448,19 @@
             "sd": 3.499271061118826,
             "z": 1.0614455552060442,
             "label": "hot",
-            "gap": 2,
+            "gap": 3,
             "gap_censored": false
           },
           "7": {
             "number": 7,
             "window": 100,
-            "count": 13,
-            "rate": 0.13,
+            "count": 14,
+            "rate": 0.14,
             "expected": 14.285714285714285,
             "sd": 3.499271061118826,
-            "z": -0.36742346141747645,
+            "z": -0.08164965809277232,
             "label": "warm",
-            "gap": 21,
+            "gap": 0,
             "gap_censored": false
           },
           "8": {
@@ -472,7 +472,7 @@
             "sd": 3.499271061118826,
             "z": -0.9389710680668847,
             "label": "warm",
-            "gap": 8,
+            "gap": 9,
             "gap_censored": false
           },
           "9": {
@@ -484,7 +484,7 @@
             "sd": 3.499271061118826,
             "z": -0.6531972647421805,
             "label": "warm",
-            "gap": 11,
+            "gap": 12,
             "gap_censored": false
           },
           "10": {
@@ -496,19 +496,19 @@
             "sd": 3.499271061118826,
             "z": 1.0614455552060442,
             "label": "hot",
-            "gap": 9,
+            "gap": 10,
             "gap_censored": false
           },
           "11": {
             "number": 11,
             "window": 100,
-            "count": 13,
-            "rate": 0.13,
+            "count": 14,
+            "rate": 0.14,
             "expected": 14.285714285714285,
             "sd": 3.499271061118826,
-            "z": -0.36742346141747645,
+            "z": -0.08164965809277232,
             "label": "warm",
-            "gap": 3,
+            "gap": 0,
             "gap_censored": false
           },
           "12": {
@@ -520,19 +520,19 @@
             "sd": 3.499271061118826,
             "z": 1.3472193585307484,
             "label": "hot",
-            "gap": 0,
+            "gap": 1,
             "gap_censored": false
           },
           "13": {
             "number": 13,
             "window": 100,
-            "count": 19,
-            "rate": 0.19,
+            "count": 18,
+            "rate": 0.18,
             "expected": 14.285714285714285,
             "sd": 3.499271061118826,
-            "z": 1.3472193585307484,
+            "z": 1.0614455552060442,
             "label": "hot",
-            "gap": 1,
+            "gap": 2,
             "gap_censored": false
           },
           "14": {
@@ -544,7 +544,7 @@
             "sd": 3.499271061118826,
             "z": 1.6329931618554523,
             "label": "hot",
-            "gap": 0,
+            "gap": 1,
             "gap_censored": false
           },
           "15": {
@@ -556,7 +556,7 @@
             "sd": 3.499271061118826,
             "z": -0.08164965809277232,
             "label": "warm",
-            "gap": 9,
+            "gap": 10,
             "gap_censored": false
           },
           "16": {
@@ -568,7 +568,7 @@
             "sd": 3.499271061118826,
             "z": -1.2247448713915887,
             "label": "cold",
-            "gap": 20,
+            "gap": 21,
             "gap_censored": false
           },
           "17": {
@@ -580,7 +580,7 @@
             "sd": 3.499271061118826,
             "z": -0.08164965809277232,
             "label": "warm",
-            "gap": 0,
+            "gap": 1,
             "gap_censored": false
           },
           "18": {
@@ -592,7 +592,7 @@
             "sd": 3.499271061118826,
             "z": 0.20412414523193181,
             "label": "warm",
-            "gap": 2,
+            "gap": 3,
             "gap_censored": false
           },
           "19": {
@@ -604,7 +604,7 @@
             "sd": 3.499271061118826,
             "z": -0.08164965809277232,
             "label": "warm",
-            "gap": 6,
+            "gap": 7,
             "gap_censored": false
           },
           "20": {
@@ -616,7 +616,7 @@
             "sd": 3.499271061118826,
             "z": 0.48989794855663593,
             "label": "warm",
-            "gap": 1,
+            "gap": 2,
             "gap_censored": false
           },
           "21": {
@@ -628,19 +628,19 @@
             "sd": 3.499271061118826,
             "z": 0.48989794855663593,
             "label": "warm",
-            "gap": 7,
+            "gap": 8,
             "gap_censored": false
           },
           "22": {
             "number": 22,
             "window": 100,
-            "count": 17,
-            "rate": 0.17,
+            "count": 16,
+            "rate": 0.16,
             "expected": 14.285714285714285,
             "sd": 3.499271061118826,
-            "z": 0.7756717518813401,
+            "z": 0.48989794855663593,
             "label": "warm",
-            "gap": 5,
+            "gap": 6,
             "gap_censored": false
           },
           "23": {
@@ -652,7 +652,7 @@
             "sd": 3.499271061118826,
             "z": -1.2247448713915887,
             "label": "cold",
-            "gap": 4,
+            "gap": 5,
             "gap_censored": false
           },
           "24": {
@@ -664,7 +664,7 @@
             "sd": 3.499271061118826,
             "z": -0.08164965809277232,
             "label": "warm",
-            "gap": 7,
+            "gap": 8,
             "gap_censored": false
           },
           "25": {
@@ -676,7 +676,7 @@
             "sd": 3.499271061118826,
             "z": 0.48989794855663593,
             "label": "warm",
-            "gap": 1,
+            "gap": 2,
             "gap_censored": false
           },
           "26": {
@@ -688,11 +688,35 @@
             "sd": 3.499271061118826,
             "z": 2.204540768504861,
             "label": "hot",
-            "gap": 11,
+            "gap": 12,
             "gap_censored": false
           },
           "27": {
             "number": 27,
+            "window": 100,
+            "count": 16,
+            "rate": 0.16,
+            "expected": 14.285714285714285,
+            "sd": 3.499271061118826,
+            "z": 0.48989794855663593,
+            "label": "warm",
+            "gap": 0,
+            "gap_censored": false
+          },
+          "28": {
+            "number": 28,
+            "window": 100,
+            "count": 12,
+            "rate": 0.12,
+            "expected": 14.285714285714285,
+            "sd": 3.499271061118826,
+            "z": -0.6531972647421805,
+            "label": "warm",
+            "gap": 7,
+            "gap_censored": false
+          },
+          "29": {
+            "number": 29,
             "window": 100,
             "count": 15,
             "rate": 0.15,
@@ -700,31 +724,7 @@
             "sd": 3.499271061118826,
             "z": 0.20412414523193181,
             "label": "warm",
-            "gap": 2,
-            "gap_censored": false
-          },
-          "28": {
-            "number": 28,
-            "window": 100,
-            "count": 13,
-            "rate": 0.13,
-            "expected": 14.285714285714285,
-            "sd": 3.499271061118826,
-            "z": -0.36742346141747645,
-            "label": "warm",
-            "gap": 6,
-            "gap_censored": false
-          },
-          "29": {
-            "number": 29,
-            "window": 100,
-            "count": 14,
-            "rate": 0.14,
-            "expected": 14.285714285714285,
-            "sd": 3.499271061118826,
-            "z": -0.08164965809277232,
-            "label": "warm",
-            "gap": 4,
+            "gap": 0,
             "gap_censored": false
           },
           "30": {
@@ -736,7 +736,7 @@
             "sd": 3.499271061118826,
             "z": -1.796292478040997,
             "label": "cold",
-            "gap": 15,
+            "gap": 16,
             "gap_censored": false
           },
           "31": {
@@ -748,7 +748,7 @@
             "sd": 3.499271061118826,
             "z": -2.082066281365701,
             "label": "cold",
-            "gap": 12,
+            "gap": 13,
             "gap_censored": false
           },
           "32": {
@@ -760,7 +760,7 @@
             "sd": 3.499271061118826,
             "z": -0.08164965809277232,
             "label": "warm",
-            "gap": 9,
+            "gap": 10,
             "gap_censored": false
           },
           "33": {
@@ -772,19 +772,19 @@
             "sd": 3.499271061118826,
             "z": 0.7756717518813401,
             "label": "warm",
-            "gap": 0,
+            "gap": 1,
             "gap_censored": false
           },
           "34": {
             "number": 34,
             "window": 100,
-            "count": 14,
-            "rate": 0.14,
+            "count": 13,
+            "rate": 0.13,
             "expected": 14.285714285714285,
             "sd": 3.499271061118826,
-            "z": -0.08164965809277232,
+            "z": -0.36742346141747645,
             "label": "warm",
-            "gap": 1,
+            "gap": 2,
             "gap_censored": false
           },
           "35": {
@@ -796,7 +796,7 @@
             "sd": 3.499271061118826,
             "z": -0.9389710680668847,
             "label": "warm",
-            "gap": 13,
+            "gap": 14,
             "gap_censored": false
           }
         },
@@ -810,19 +810,19 @@
             "sd": 3.7267799624996494,
             "z": -0.17888543819998254,
             "label": "warm",
-            "gap": 5,
+            "gap": 6,
             "gap_censored": false
           },
           "2": {
             "number": 2,
             "window": 100,
-            "count": 18,
-            "rate": 0.18,
+            "count": 19,
+            "rate": 0.19,
             "expected": 16.666666666666664,
             "sd": 3.7267799624996494,
-            "z": 0.357770876399967,
+            "z": 0.6260990336999418,
             "label": "warm",
-            "gap": 7,
+            "gap": 0,
             "gap_censored": false
           },
           "3": {
@@ -834,7 +834,7 @@
             "sd": 3.7267799624996494,
             "z": -2.0571825392998058,
             "label": "cold",
-            "gap": 2,
+            "gap": 3,
             "gap_censored": false
           },
           "4": {
@@ -846,31 +846,31 @@
             "sd": 3.7267799624996494,
             "z": 0.6260990336999418,
             "label": "warm",
-            "gap": 3,
+            "gap": 4,
             "gap_censored": false
           },
           "5": {
             "number": 5,
             "window": 100,
-            "count": 14,
-            "rate": 0.14,
+            "count": 13,
+            "rate": 0.13,
             "expected": 16.666666666666664,
             "sd": 3.7267799624996494,
-            "z": -0.715541752799932,
+            "z": -0.9838699100999069,
             "label": "warm",
-            "gap": 34,
+            "gap": 35,
             "gap_censored": false
           },
           "6": {
             "number": 6,
             "window": 100,
-            "count": 14,
-            "rate": 0.14,
+            "count": 15,
+            "rate": 0.15,
             "expected": 16.666666666666664,
             "sd": 3.7267799624996494,
-            "z": -0.715541752799932,
+            "z": -0.4472135954999573,
             "label": "warm",
-            "gap": 3,
+            "gap": 0,
             "gap_censored": false
           },
           "7": {
@@ -882,7 +882,7 @@
             "sd": 3.7267799624996494,
             "z": 1.1627553482998914,
             "label": "hot",
-            "gap": 0,
+            "gap": 1,
             "gap_censored": false
           },
           "8": {
@@ -894,7 +894,7 @@
             "sd": 3.7267799624996494,
             "z": 0.357770876399967,
             "label": "warm",
-            "gap": 0,
+            "gap": 1,
             "gap_censored": false
           },
           "9": {
@@ -906,7 +906,7 @@
             "sd": 3.7267799624996494,
             "z": 0.8944271909999165,
             "label": "warm",
-            "gap": 1,
+            "gap": 2,
             "gap_censored": false
           },
           "10": {
@@ -918,7 +918,7 @@
             "sd": 3.7267799624996494,
             "z": -0.4472135954999573,
             "label": "warm",
-            "gap": 4,
+            "gap": 5,
             "gap_censored": false
           },
           "11": {
@@ -930,19 +930,19 @@
             "sd": 3.7267799624996494,
             "z": -0.4472135954999573,
             "label": "warm",
-            "gap": 6,
+            "gap": 7,
             "gap_censored": false
           },
           "12": {
             "number": 12,
             "window": 100,
-            "count": 21,
-            "rate": 0.21,
+            "count": 20,
+            "rate": 0.2,
             "expected": 16.666666666666664,
             "sd": 3.7267799624996494,
-            "z": 1.1627553482998914,
-            "label": "hot",
-            "gap": 1,
+            "z": 0.8944271909999165,
+            "label": "warm",
+            "gap": 2,
             "gap_censored": false
           }
         },
@@ -979,7 +979,7 @@
             "span": 30,
             "adjacent_pairs": 0,
             "max_run": 1,
-            "repeat_previous": 2,
+            "repeat_previous": 1,
             "hot": 1,
             "warm": 4,
             "cold": 0
@@ -993,7 +993,7 @@
             "span": 1,
             "adjacent_pairs": 1,
             "max_run": 2,
-            "repeat_previous": 2,
+            "repeat_previous": 0,
             "hot": 1,
             "warm": 1,
             "cold": 0
@@ -1021,7 +1021,7 @@
             "span": 19,
             "adjacent_pairs": 0,
             "max_run": 1,
-            "repeat_previous": 2,
+            "repeat_previous": 0,
             "hot": 1,
             "warm": 2,
             "cold": 2
@@ -1077,7 +1077,7 @@
             "span": 3,
             "adjacent_pairs": 0,
             "max_run": 1,
-            "repeat_previous": 0,
+            "repeat_previous": 1,
             "hot": 0,
             "warm": 2,
             "cold": 0
@@ -1105,7 +1105,7 @@
             "span": 26,
             "adjacent_pairs": 1,
             "max_run": 2,
-            "repeat_previous": 0,
+            "repeat_previous": 1,
             "hot": 0,
             "warm": 3,
             "cold": 2
@@ -1147,7 +1147,7 @@
             "span": 20,
             "adjacent_pairs": 0,
             "max_run": 1,
-            "repeat_previous": 2,
+            "repeat_previous": 1,
             "hot": 1,
             "warm": 3,
             "cold": 1
@@ -1269,7 +1269,7 @@
         "max_left": 2,
         "max_right": 1
       },
-      "diversity_score": 33,
+      "diversity_score": 31,
       "candidate_partitions": 1,
       "sampling_attempts": 5,
       "space_size": 21425712,
@@ -1296,25 +1296,25 @@
           "1": {
             "number": 1,
             "window": 100,
-            "count": 11,
-            "rate": 0.11,
+            "count": 12,
+            "rate": 0.12,
             "expected": 14.285714285714285,
             "sd": 3.499271061118826,
-            "z": -0.9389710680668847,
+            "z": -0.6531972647421805,
             "label": "warm",
-            "gap": 9,
+            "gap": 0,
             "gap_censored": false
           },
           "2": {
             "number": 2,
             "window": 100,
-            "count": 14,
-            "rate": 0.14,
+            "count": 13,
+            "rate": 0.13,
             "expected": 14.285714285714285,
             "sd": 3.499271061118826,
-            "z": -0.08164965809277232,
+            "z": -0.36742346141747645,
             "label": "warm",
-            "gap": 0,
+            "gap": 1,
             "gap_censored": false
           },
           "3": {
@@ -1326,7 +1326,7 @@
             "sd": 3.499271061118826,
             "z": 1.0614455552060442,
             "label": "hot",
-            "gap": 1,
+            "gap": 2,
             "gap_censored": false
           },
           "4": {
@@ -1338,7 +1338,7 @@
             "sd": 3.499271061118826,
             "z": -0.6531972647421805,
             "label": "warm",
-            "gap": 12,
+            "gap": 13,
             "gap_censored": false
           },
           "5": {
@@ -1350,7 +1350,7 @@
             "sd": 3.499271061118826,
             "z": -0.9389710680668847,
             "label": "warm",
-            "gap": 2,
+            "gap": 3,
             "gap_censored": false
           },
           "6": {
@@ -1362,19 +1362,19 @@
             "sd": 3.499271061118826,
             "z": 1.0614455552060442,
             "label": "hot",
-            "gap": 2,
+            "gap": 3,
             "gap_censored": false
           },
           "7": {
             "number": 7,
             "window": 100,
-            "count": 13,
-            "rate": 0.13,
+            "count": 14,
+            "rate": 0.14,
             "expected": 14.285714285714285,
             "sd": 3.499271061118826,
-            "z": -0.36742346141747645,
+            "z": -0.08164965809277232,
             "label": "warm",
-            "gap": 21,
+            "gap": 0,
             "gap_censored": false
           },
           "8": {
@@ -1386,7 +1386,7 @@
             "sd": 3.499271061118826,
             "z": -0.9389710680668847,
             "label": "warm",
-            "gap": 8,
+            "gap": 9,
             "gap_censored": false
           },
           "9": {
@@ -1398,7 +1398,7 @@
             "sd": 3.499271061118826,
             "z": -0.6531972647421805,
             "label": "warm",
-            "gap": 11,
+            "gap": 12,
             "gap_censored": false
           },
           "10": {
@@ -1410,19 +1410,19 @@
             "sd": 3.499271061118826,
             "z": 1.0614455552060442,
             "label": "hot",
-            "gap": 9,
+            "gap": 10,
             "gap_censored": false
           },
           "11": {
             "number": 11,
             "window": 100,
-            "count": 13,
-            "rate": 0.13,
+            "count": 14,
+            "rate": 0.14,
             "expected": 14.285714285714285,
             "sd": 3.499271061118826,
-            "z": -0.36742346141747645,
+            "z": -0.08164965809277232,
             "label": "warm",
-            "gap": 3,
+            "gap": 0,
             "gap_censored": false
           },
           "12": {
@@ -1434,19 +1434,19 @@
             "sd": 3.499271061118826,
             "z": 1.3472193585307484,
             "label": "hot",
-            "gap": 0,
+            "gap": 1,
             "gap_censored": false
           },
           "13": {
             "number": 13,
             "window": 100,
-            "count": 19,
-            "rate": 0.19,
+            "count": 18,
+            "rate": 0.18,
             "expected": 14.285714285714285,
             "sd": 3.499271061118826,
-            "z": 1.3472193585307484,
+            "z": 1.0614455552060442,
             "label": "hot",
-            "gap": 1,
+            "gap": 2,
             "gap_censored": false
           },
           "14": {
@@ -1458,7 +1458,7 @@
             "sd": 3.499271061118826,
             "z": 1.6329931618554523,
             "label": "hot",
-            "gap": 0,
+            "gap": 1,
             "gap_censored": false
           },
           "15": {
@@ -1470,7 +1470,7 @@
             "sd": 3.499271061118826,
             "z": -0.08164965809277232,
             "label": "warm",
-            "gap": 9,
+            "gap": 10,
             "gap_censored": false
           },
           "16": {
@@ -1482,7 +1482,7 @@
             "sd": 3.499271061118826,
             "z": -1.2247448713915887,
             "label": "cold",
-            "gap": 20,
+            "gap": 21,
             "gap_censored": false
           },
           "17": {
@@ -1494,7 +1494,7 @@
             "sd": 3.499271061118826,
             "z": -0.08164965809277232,
             "label": "warm",
-            "gap": 0,
+            "gap": 1,
             "gap_censored": false
           },
           "18": {
@@ -1506,7 +1506,7 @@
             "sd": 3.499271061118826,
             "z": 0.20412414523193181,
             "label": "warm",
-            "gap": 2,
+            "gap": 3,
             "gap_censored": false
           },
           "19": {
@@ -1518,7 +1518,7 @@
             "sd": 3.499271061118826,
             "z": -0.08164965809277232,
             "label": "warm",
-            "gap": 6,
+            "gap": 7,
             "gap_censored": false
           },
           "20": {
@@ -1530,7 +1530,7 @@
             "sd": 3.499271061118826,
             "z": 0.48989794855663593,
             "label": "warm",
-            "gap": 1,
+            "gap": 2,
             "gap_censored": false
           },
           "21": {
@@ -1542,19 +1542,19 @@
             "sd": 3.499271061118826,
             "z": 0.48989794855663593,
             "label": "warm",
-            "gap": 7,
+            "gap": 8,
             "gap_censored": false
           },
           "22": {
             "number": 22,
             "window": 100,
-            "count": 17,
-            "rate": 0.17,
+            "count": 16,
+            "rate": 0.16,
             "expected": 14.285714285714285,
             "sd": 3.499271061118826,
-            "z": 0.7756717518813401,
+            "z": 0.48989794855663593,
             "label": "warm",
-            "gap": 5,
+            "gap": 6,
             "gap_censored": false
           },
           "23": {
@@ -1566,7 +1566,7 @@
             "sd": 3.499271061118826,
             "z": -1.2247448713915887,
             "label": "cold",
-            "gap": 4,
+            "gap": 5,
             "gap_censored": false
           },
           "24": {
@@ -1578,7 +1578,7 @@
             "sd": 3.499271061118826,
             "z": -0.08164965809277232,
             "label": "warm",
-            "gap": 7,
+            "gap": 8,
             "gap_censored": false
           },
           "25": {
@@ -1590,7 +1590,7 @@
             "sd": 3.499271061118826,
             "z": 0.48989794855663593,
             "label": "warm",
-            "gap": 1,
+            "gap": 2,
             "gap_censored": false
           },
           "26": {
@@ -1602,11 +1602,35 @@
             "sd": 3.499271061118826,
             "z": 2.204540768504861,
             "label": "hot",
-            "gap": 11,
+            "gap": 12,
             "gap_censored": false
           },
           "27": {
             "number": 27,
+            "window": 100,
+            "count": 16,
+            "rate": 0.16,
+            "expected": 14.285714285714285,
+            "sd": 3.499271061118826,
+            "z": 0.48989794855663593,
+            "label": "warm",
+            "gap": 0,
+            "gap_censored": false
+          },
+          "28": {
+            "number": 28,
+            "window": 100,
+            "count": 12,
+            "rate": 0.12,
+            "expected": 14.285714285714285,
+            "sd": 3.499271061118826,
+            "z": -0.6531972647421805,
+            "label": "warm",
+            "gap": 7,
+            "gap_censored": false
+          },
+          "29": {
+            "number": 29,
             "window": 100,
             "count": 15,
             "rate": 0.15,
@@ -1614,31 +1638,7 @@
             "sd": 3.499271061118826,
             "z": 0.20412414523193181,
             "label": "warm",
-            "gap": 2,
-            "gap_censored": false
-          },
-          "28": {
-            "number": 28,
-            "window": 100,
-            "count": 13,
-            "rate": 0.13,
-            "expected": 14.285714285714285,
-            "sd": 3.499271061118826,
-            "z": -0.36742346141747645,
-            "label": "warm",
-            "gap": 6,
-            "gap_censored": false
-          },
-          "29": {
-            "number": 29,
-            "window": 100,
-            "count": 14,
-            "rate": 0.14,
-            "expected": 14.285714285714285,
-            "sd": 3.499271061118826,
-            "z": -0.08164965809277232,
-            "label": "warm",
-            "gap": 4,
+            "gap": 0,
             "gap_censored": false
           },
           "30": {
@@ -1650,7 +1650,7 @@
             "sd": 3.499271061118826,
             "z": -1.796292478040997,
             "label": "cold",
-            "gap": 15,
+            "gap": 16,
             "gap_censored": false
           },
           "31": {
@@ -1662,7 +1662,7 @@
             "sd": 3.499271061118826,
             "z": -2.082066281365701,
             "label": "cold",
-            "gap": 12,
+            "gap": 13,
             "gap_censored": false
           },
           "32": {
@@ -1674,7 +1674,7 @@
             "sd": 3.499271061118826,
             "z": -0.08164965809277232,
             "label": "warm",
-            "gap": 9,
+            "gap": 10,
             "gap_censored": false
           },
           "33": {
@@ -1686,19 +1686,19 @@
             "sd": 3.499271061118826,
             "z": 0.7756717518813401,
             "label": "warm",
-            "gap": 0,
+            "gap": 1,
             "gap_censored": false
           },
           "34": {
             "number": 34,
             "window": 100,
-            "count": 14,
-            "rate": 0.14,
+            "count": 13,
+            "rate": 0.13,
             "expected": 14.285714285714285,
             "sd": 3.499271061118826,
-            "z": -0.08164965809277232,
+            "z": -0.36742346141747645,
             "label": "warm",
-            "gap": 1,
+            "gap": 2,
             "gap_censored": false
           },
           "35": {
@@ -1710,7 +1710,7 @@
             "sd": 3.499271061118826,
             "z": -0.9389710680668847,
             "label": "warm",
-            "gap": 13,
+            "gap": 14,
             "gap_censored": false
           }
         },
@@ -1724,19 +1724,19 @@
             "sd": 3.7267799624996494,
             "z": -0.17888543819998254,
             "label": "warm",
-            "gap": 5,
+            "gap": 6,
             "gap_censored": false
           },
           "2": {
             "number": 2,
             "window": 100,
-            "count": 18,
-            "rate": 0.18,
+            "count": 19,
+            "rate": 0.19,
             "expected": 16.666666666666664,
             "sd": 3.7267799624996494,
-            "z": 0.357770876399967,
+            "z": 0.6260990336999418,
             "label": "warm",
-            "gap": 7,
+            "gap": 0,
             "gap_censored": false
           },
           "3": {
@@ -1748,7 +1748,7 @@
             "sd": 3.7267799624996494,
             "z": -2.0571825392998058,
             "label": "cold",
-            "gap": 2,
+            "gap": 3,
             "gap_censored": false
           },
           "4": {
@@ -1760,31 +1760,31 @@
             "sd": 3.7267799624996494,
             "z": 0.6260990336999418,
             "label": "warm",
-            "gap": 3,
+            "gap": 4,
             "gap_censored": false
           },
           "5": {
             "number": 5,
             "window": 100,
-            "count": 14,
-            "rate": 0.14,
+            "count": 13,
+            "rate": 0.13,
             "expected": 16.666666666666664,
             "sd": 3.7267799624996494,
-            "z": -0.715541752799932,
+            "z": -0.9838699100999069,
             "label": "warm",
-            "gap": 34,
+            "gap": 35,
             "gap_censored": false
           },
           "6": {
             "number": 6,
             "window": 100,
-            "count": 14,
-            "rate": 0.14,
+            "count": 15,
+            "rate": 0.15,
             "expected": 16.666666666666664,
             "sd": 3.7267799624996494,
-            "z": -0.715541752799932,
+            "z": -0.4472135954999573,
             "label": "warm",
-            "gap": 3,
+            "gap": 0,
             "gap_censored": false
           },
           "7": {
@@ -1796,7 +1796,7 @@
             "sd": 3.7267799624996494,
             "z": 1.1627553482998914,
             "label": "hot",
-            "gap": 0,
+            "gap": 1,
             "gap_censored": false
           },
           "8": {
@@ -1808,7 +1808,7 @@
             "sd": 3.7267799624996494,
             "z": 0.357770876399967,
             "label": "warm",
-            "gap": 0,
+            "gap": 1,
             "gap_censored": false
           },
           "9": {
@@ -1820,7 +1820,7 @@
             "sd": 3.7267799624996494,
             "z": 0.8944271909999165,
             "label": "warm",
-            "gap": 1,
+            "gap": 2,
             "gap_censored": false
           },
           "10": {
@@ -1832,7 +1832,7 @@
             "sd": 3.7267799624996494,
             "z": -0.4472135954999573,
             "label": "warm",
-            "gap": 4,
+            "gap": 5,
             "gap_censored": false
           },
           "11": {
@@ -1844,19 +1844,19 @@
             "sd": 3.7267799624996494,
             "z": -0.4472135954999573,
             "label": "warm",
-            "gap": 6,
+            "gap": 7,
             "gap_censored": false
           },
           "12": {
             "number": 12,
             "window": 100,
-            "count": 21,
-            "rate": 0.21,
+            "count": 20,
+            "rate": 0.2,
             "expected": 16.666666666666664,
             "sd": 3.7267799624996494,
-            "z": 1.1627553482998914,
-            "label": "hot",
-            "gap": 1,
+            "z": 0.8944271909999165,
+            "label": "warm",
+            "gap": 2,
             "gap_censored": false
           }
         },
@@ -1890,7 +1890,7 @@
         },
         {
           "value": 5,
-          "count": 14
+          "count": 15
         }
       ],
       "small": [
@@ -1908,7 +1908,7 @@
         },
         {
           "value": 3,
-          "count": 192
+          "count": 193
         },
         {
           "value": 4,
@@ -2062,7 +2062,7 @@
         },
         {
           "value": 75,
-          "count": 5
+          "count": 6
         },
         {
           "value": 76,
@@ -2416,7 +2416,7 @@
         },
         {
           "value": 28,
-          "count": 43
+          "count": 44
         },
         {
           "value": 29,
@@ -2446,7 +2446,7 @@
       "adjacent_pairs": [
         {
           "value": 0,
-          "count": 294
+          "count": 295
         },
         {
           "value": 1,
@@ -2464,7 +2464,7 @@
       "repeat_previous": [
         {
           "value": 0,
-          "count": 259
+          "count": 260
         },
         {
           "value": 1,
@@ -2480,19 +2480,19 @@
         }
       ],
       "sample_sizes": {
-        "odd": 581,
-        "small": 581,
-        "sum": 581,
-        "span": 581,
-        "adjacent_pairs": 581,
-        "repeat_previous": 580
+        "odd": 582,
+        "small": 582,
+        "sum": 582,
+        "span": 582,
+        "adjacent_pairs": 582,
+        "repeat_previous": 581
       }
     },
     "right": {
       "odd": [
         {
           "value": 0,
-          "count": 130
+          "count": 131
         },
         {
           "value": 1,
@@ -2514,7 +2514,7 @@
         },
         {
           "value": 2,
-          "count": 118
+          "count": 119
         }
       ],
       "sum": [
@@ -2540,7 +2540,7 @@
         },
         {
           "value": 8,
-          "count": 25
+          "count": 26
         },
         {
           "value": 9,
@@ -2618,7 +2618,7 @@
         },
         {
           "value": 4,
-          "count": 74
+          "count": 75
         },
         {
           "value": 5,
@@ -2652,7 +2652,7 @@
       "adjacent_pairs": [
         {
           "value": 0,
-          "count": 484
+          "count": 485
         },
         {
           "value": 1,
@@ -2662,7 +2662,7 @@
       "repeat_previous": [
         {
           "value": 0,
-          "count": 385
+          "count": 386
         },
         {
           "value": 1,
@@ -2674,16 +2674,31 @@
         }
       ],
       "sample_sizes": {
-        "odd": 581,
-        "small": 581,
-        "sum": 581,
-        "span": 581,
-        "adjacent_pairs": 581,
-        "repeat_previous": 580
+        "odd": 582,
+        "small": 582,
+        "sum": 582,
+        "span": 582,
+        "adjacent_pairs": 582,
+        "repeat_previous": 581
       }
     }
   },
   "recent_draws": [
+    {
+      "id": "26130",
+      "date": "2026-11-14",
+      "left": [
+        1,
+        7,
+        11,
+        27,
+        29
+      ],
+      "right": [
+        2,
+        6
+      ]
+    },
     {
       "id": "26129",
       "date": "2026-11-11",
@@ -2787,21 +2802,6 @@
       "right": [
         9,
         11
-      ]
-    },
-    {
-      "id": "26122",
-      "date": "2026-10-26",
-      "left": [
-        2,
-        14,
-        21,
-        22,
-        24
-      ],
-      "right": [
-        2,
-        12
       ]
     }
   ]
